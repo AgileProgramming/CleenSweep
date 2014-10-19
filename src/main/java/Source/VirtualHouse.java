@@ -1,5 +1,8 @@
 package Source;
 
+import Source.SensorInterface.direction;
+import Source.SensorInterface.feature;
+import Source.SensorInterface.floorType;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -71,7 +74,7 @@ public class VirtualHouse {
             inputFile = in.readLine();
          } catch (Exception e) {
             logger.log(Level.SEVERE, "Input file not found", e);
-         };
+         }
          if (inputFile.isEmpty()) {
             inputFile = "floorplan.xml";
          }
@@ -86,7 +89,7 @@ public class VirtualHouse {
             line = in.readLine();
          } catch (Exception e) {
             logger.log(Level.WARNING, "Keypad not working?", e);
-         };
+         }
          if ("Y".equals(line) || "y".equals(line)) {
             useGraphics = true;
             break;
@@ -141,13 +144,13 @@ public class VirtualHouse {
          br = new BufferedReader(new FileReader(f));
       } catch (Exception e) {
          logger.log(Level.WARNING, "File not Found", e);
-      };
+      }
       for (;;) {
          try {
             line = br.readLine();
          } catch (Exception e) {
             logger.log(Level.WARNING, "Cannot Read File", e);
-         };
+         }
          if (line == null) {
             break;
          }
@@ -184,11 +187,11 @@ public class VirtualHouse {
             B = line.indexOf("'", A);
 
             if ("4".equals(line.substring(A, B))) {
-               CD.sI.floor = SensorInterface.floorType.HighPileCarpet;
+               CD.sI.floor = floorType.HighPileCarpet;
             } else if ("2".equals(line.substring(A, B))) {
-               CD.sI.floor = SensorInterface.floorType.LowPileCarpet;
+               CD.sI.floor = floorType.LowPileCarpet;
             } else {
-               CD.sI.floor = SensorInterface.floorType.BareFloor;
+               CD.sI.floor = floorType.BareFloor;
             }
             /*get amount of dirt of floor*/
             A = line.indexOf("ds") + 4;
@@ -204,39 +207,45 @@ public class VirtualHouse {
                CD.sI.dirtPresent = false;
             }
             /*get wall sensors*/
+            direction n = direction.NORTH;
+            direction e = direction.EAST;
+            direction s = direction.SOUTH;
+            direction w = direction.WEST;
             A = line.indexOf("ps") + 4;
             String a = line.substring(A, A + 1);
-            if ("1".equals(line.substring(A, A + 1))) {
-               CD.sI.east = SensorInterface.feature.OPEN;
-            } else if ("2".equals(line.substring(A, A + 1))) {
-               CD.sI.east = SensorInterface.feature.OBSTICLE;
+
+            if (line.substring(A, A + 1).equals("1")) {
+               CD.sI.features[e.index()] = SensorInterface.feature.OPEN;
+            } else if (line.substring(A, A + 1).equals("2")) {
+               CD.sI.features[e.index()] = SensorInterface.feature.OBSTICLE;
             } else {
-               CD.sI.east = SensorInterface.feature.STAIRS;
+               CD.sI.features[e.index()] = SensorInterface.feature.STAIRS;
             }
             A++;
-            if ("1".equals(line.substring(A, A + 1))) {
-               CD.sI.west = SensorInterface.feature.OPEN;
-            } else if ("2".equals(line.substring(A, A + 1))) {
-               CD.sI.west = SensorInterface.feature.OBSTICLE;
+            if (line.substring(A, A + 1).equals("1")) {
+               CD.sI.features[w.index()] = SensorInterface.feature.OPEN;
+            } else if (line.substring(A, A + 1).equals("2")) {
+               CD.sI.features[w.index()] = SensorInterface.feature.OBSTICLE;
             } else {
-               CD.sI.west = SensorInterface.feature.STAIRS;
+               CD.sI.features[w.index()] = SensorInterface.feature.STAIRS;
             }
             A++;
-            if ("1".equals(line.substring(A, A + 1))) {
-               CD.sI.north = SensorInterface.feature.OPEN;
-            } else if ("2".equals(line.substring(A, A + 1))) {
-               CD.sI.north = SensorInterface.feature.OBSTICLE;
+            if (line.substring(A, A + 1).equals("1")) {
+               CD.sI.features[n.index()] = SensorInterface.feature.OPEN;
+            } else if (line.substring(A, A + 1).equals("2")) {
+               CD.sI.features[n.index()] = SensorInterface.feature.OBSTICLE;
             } else {
-               CD.sI.north = SensorInterface.feature.STAIRS;
+               CD.sI.features[n.index()] = SensorInterface.feature.STAIRS;
             }
             A++;
-            if ("1".equals(line.substring(A, A + 1))) {
-               CD.sI.south = SensorInterface.feature.OPEN;
-            } else if ("2".equals(line.substring(A, A + 1))) {
-               CD.sI.south = SensorInterface.feature.OBSTICLE;
+            if (line.substring(A, A + 1).equals("1")) {
+               CD.sI.features[s.index()] = SensorInterface.feature.OPEN;
+            } else if (line.substring(A, A + 1).equals("2")) {
+               CD.sI.features[s.index()] = SensorInterface.feature.OBSTICLE;
             } else {
-               CD.sI.south = SensorInterface.feature.STAIRS;
+               CD.sI.features[s.index()] = SensorInterface.feature.STAIRS;
             }
+            A++;
             /*check if it is charging station*/
             A = line.indexOf("cs") + 4;
             B = line.indexOf("'", A);
@@ -256,7 +265,7 @@ public class VirtualHouse {
          br.close();
       } catch (Exception e) {
          logger.log(Level.WARNING, "Cannot close file", e);
-      };
+      }
       return maxDim;
    }
 
@@ -266,7 +275,7 @@ public class VirtualHouse {
     * Removes jPanel window graphic and should be called before program exits
     */
    public void Remove() {
-      if (useGraphics){
+      if (useGraphics) {
          picture.Remove();
       }
    }
@@ -297,24 +306,12 @@ public class VirtualHouse {
     */
    public boolean Move(int newX, int newY) {
       boolean movementOK = false;
-      if (currentCell.locX == newX && (currentCell.locY + 1) == newY) {
-         if (currentCell.sI.north == SensorInterface.feature.OPEN) {
-            movementOK = true;
-         }
-      }
-      if ((currentCell.locX + 1) == newX && currentCell.locY == newY) {
-         if (currentCell.sI.east == SensorInterface.feature.OPEN) {
-            movementOK = true;
-         }
-      }
-      if (currentCell.locX == newX && (currentCell.locY - 1) == newY) {
-         if (currentCell.sI.south == SensorInterface.feature.OPEN) {
-            movementOK = true;
-         }
-      }
-      if ((currentCell.locX - 1) == newX && currentCell.locY == newY) {
-         if (currentCell.sI.west == SensorInterface.feature.OPEN) {
-            movementOK = true;
+      for (direction d : direction.values()) {
+         if ((currentCell.locX + d.xOffset()) == newX
+                 && (currentCell.locY + d.yOffset()) == newY) {
+            if (currentCell.sI.features[d.index()] == feature.OPEN) {
+               movementOK = true;
+            }
          }
       }
       if (movementOK) {
@@ -377,10 +374,9 @@ public class VirtualHouse {
     */
    public void SensorInformation(SensorInterface tempSI) {
       if (tempSI != null) {
-         tempSI.north = currentCell.sI.north;
-         tempSI.east = currentCell.sI.east;
-         tempSI.south = currentCell.sI.south;
-         tempSI.west = currentCell.sI.west;
+         for (direction d : direction.values()) {
+            tempSI.features[d.index()] = currentCell.sI.features[d.index()];
+         }
          tempSI.floor = currentCell.sI.floor;
          tempSI.atChargingStation = currentCell.sI.atChargingStation;
          if (currentCell.dirt > 0) {

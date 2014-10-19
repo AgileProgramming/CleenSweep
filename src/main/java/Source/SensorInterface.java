@@ -11,54 +11,104 @@ package Source;
  * @version     I1
  * @date        11Sep2014
  */
-public class SensorInterface
-{
+public class SensorInterface {
    /*
     * Enumerator for features defined in the project as well as one
     * that my be useful to aid in navigation.
     */
-   public enum feature
-   {
+
+   public enum feature {
+
       UNKNOWN(0),
       OPEN(1),
       OBSTICLE(2),
       DOOR(3),
       STAIRS(4);
       private int f;
-      private feature( int i){this.f = i;}
-      public int feature(){return f;}
+
+      private feature(int i) {
+         this.f = i;
+      }
+
+      public int feature() {
+         return f;
+      }
    }
-   
+
    /*
     * Enumerator for floor types defined in the project. The battery charge
     * required to clean and move across the surfaces are included NOTE that 
     * the charges are in 10x. This avoids doubles and the comparision issues
     * that result
     */
-   public enum floorType
-   {
-      BareFloor(1,10),
-      LowPileCarpet(2,20),
-      HighPileCarpet(4,30);
+   public enum floorType {
+
+      BareFloor(1, 10),
+      LowPileCarpet(2, 20),
+      HighPileCarpet(4, 30);
       private int ft;
       private int c;
-      private floorType( int ft, int c)
-      {this.ft = ft; this.c = c;} 
-      public int floorType(){return ft;}
-      public int charge(){return c;}
+
+      private floorType(int ft, int c) {
+         this.ft = ft;
+         this.c = c;
+      }
+
+      public int floorType() {
+         return ft;
+      }
+
+      public int charge() {
+         return c;
+      }
    }
-   
+
+   /*
+    * Enumerator for direction. the enums include an index into the feature
+    * array as well as X and Y offsets for those directions
+    */
+   public enum direction {
+      NORTH(0, 0, 1),
+      EAST(1, 1, 0),
+      SOUTH(2, 0, -1),
+      WEST(3, -1, 0);
+      private int index;
+      private int xOffset;
+      private int yOffset;
+
+      private direction(int l, int x, int y) {
+         this.index = l;
+         this.xOffset = x;
+         this.yOffset = y;
+      }
+
+      public int index() {
+         return index;
+      }
+
+      public int xOffset() {
+         return xOffset;
+      }
+
+      public int yOffset() {
+         return yOffset;
+      }
+   }
    /*
     * Varibles represent each sensor present on the Clean Sweep Robot
     */
    public floorType floor;
-   public feature north;
-   public feature east;
-   public feature south;
-   public feature west;
+   public feature[] features;
    public boolean dirtPresent;
    public boolean atChargingStation;
-   
+   /*
+    * Constructor instantiates the feature array
+    */
+   public static final int numberOfDirections = 4;
+
+   public SensorInterface() {
+      features = new feature[numberOfDirections];
+   }
    /*
     * Variables do not belong here since they do not represent sensors but 
     * do represent data that must be passed from the .xml stored in the 
@@ -66,5 +116,4 @@ public class SensorInterface
     */
    public int StartingXCoord;
    public int StartingYCoord;
-   
 }

@@ -14,8 +14,8 @@ import static org.junit.Assert.*;
  * JUnit test for InternalSensors which tracks battery life and dust bing capacity
  * 
  * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
- * @version     I1
- * @date        13Sep2014
+ * @version     I2
+ * @date        25Sep2014
  */
 public class InternalSensorsTest {
 

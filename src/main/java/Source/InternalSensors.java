@@ -9,8 +9,8 @@ import Source.SensorInterface.floorType;
  * and dust bin capacity.
  * 
  * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
- * @version     I1
- * @date        15Sep2014
+ * @version     I2
+ * @date        25Sep2014
  */
 public class InternalSensors {
 
@@ -45,12 +45,12 @@ public class InternalSensors {
     */
    public void moved(floorType newFloorType) {
       int drained = ((currentFloorType.charge() + newFloorType.charge()) / 2);
-      if ( batteryCharge > drained){
+      if (batteryCharge > drained) {
          batteryCharge -= drained;
       } else {
          batteryCharge = 0;
       }
-      
+
       currentFloorType = newFloorType;
    }
 
@@ -63,7 +63,7 @@ public class InternalSensors {
          batteryCharge -= currentFloorType.charge();
       } else {
          batteryCharge = 0;
-      } 
+      }
       if (dustBinCapacity > 0) {
          dustBinCapacity--;
       }
@@ -80,7 +80,7 @@ public class InternalSensors {
       } else {
          batteryCharge = 0;
       }
-         
+
       if (dustBinCapacity > 0) {
          dustBinCapacity--;
       }

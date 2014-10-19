@@ -9,20 +9,20 @@ package Source;
  * @version     I1
  * @date        11Sep2014
  */
-public class CleanSweep
-{
-   public static void main(String[] args)
-   {
+public class CleanSweep {
+
+   public static void main(String[] args) {
       /*Get user input, .xml file name and if graphics are desired,
        * read file and save to provide input to Robot*/
       VirtualHouse CleanSweepInput = new VirtualHouse();
-      
+
       /*Setup lists and private variable to get Robot ready to roll */
-      CleanSweepRobot Robot = new CleanSweepRobot( CleanSweepInput );
-      
+      CleanSweepRobot Robot = new CleanSweepRobot(CleanSweepInput);
+
       /*Move robot around unit all spaces have been visited*/
-      while ( Robot.CleanSweepUpdate() ){}
-      
-      CleanSweepInput.Remove();      
+      while (Robot.cleanSweepUpdate()) {
+      }
+
+      CleanSweepInput.Remove();
    }
 }
