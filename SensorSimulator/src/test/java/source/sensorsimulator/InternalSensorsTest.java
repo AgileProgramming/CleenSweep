@@ -1,6 +1,6 @@
-package Source;
+package source.sensorsimulator;
 
-import Source.SensorInterface.floorType;
+import source.sensorsimulator.SensorInterface.floorType;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,6 +17,8 @@ import static org.junit.Assert.*;
  * @version     I2
  * @date        25Sep2014
  */
+
+
 public class InternalSensorsTest {
 
    public InternalSensorsTest() {
@@ -41,6 +43,7 @@ public class InternalSensorsTest {
    /**
     * Test of moved method, of class InternalSensors.
     */
+
    @Test
    public void testMoved() {
       System.out.println("Test moved()");
@@ -74,6 +77,7 @@ public class InternalSensorsTest {
    /**
     * Test of swept method, of class InternalSensors.
     */
+
    @Test
    public void testSwept_0args() {
       System.out.println("Test swept()");
@@ -97,6 +101,7 @@ public class InternalSensorsTest {
    /**
     * Test of swept method, of class InternalSensors.
     */
+
    @Test
    public void testSwept_SensorInterfacefloorType() {
       System.out.println("Test swept(floortype)");
@@ -119,6 +124,7 @@ public class InternalSensorsTest {
    /**
     * Test of emptyDustBin method, of class InternalSensors.
     */
+
    @Test
    public void testEmptyDustBin() {
       System.out.println("Test emptyDustBin()");
@@ -136,6 +142,7 @@ public class InternalSensorsTest {
    /**
     * Test of chargeBattery method, of class InternalSensors.
     */
+
    @Test
    public void testChargeBattery() {
       System.out.println("Test chargeBattery()");
@@ -153,6 +160,7 @@ public class InternalSensorsTest {
    /**
     * Test of dustBinCapacity method, of class InternalSensors.
     */
+
    @Test
    public void testDustBinCapacity() {
       System.out.println("Test dustBinCapacity()");
@@ -173,6 +181,7 @@ public class InternalSensorsTest {
    /**
     * Test of Charge method, of class InternalSensors.
     */
+
    @Test
    public void testCharge() {
       System.out.println("Test charge()");

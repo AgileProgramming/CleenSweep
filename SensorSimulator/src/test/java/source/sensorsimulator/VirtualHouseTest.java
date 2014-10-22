@@ -1,8 +1,8 @@
-package Source;
+package source.sensorsimulator;
 
-import Source.SensorInterface.feature;
-import Source.SensorInterface.floorType;
-import Source.SensorInterface.direction;
+import source.sensorsimulator.SensorInterface.feature;
+import source.sensorsimulator.SensorInterface.floorType;
+import source.sensorsimulator.SensorInterface.direction;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,6 +19,7 @@ import static org.junit.Assert.*;
  * @version     I1
  * @date        13Sep2014
  */
+
 public class VirtualHouseTest {
 
    public VirtualHouseTest() {
@@ -43,6 +44,7 @@ public class VirtualHouseTest {
    /**
     * Test of Remove method, of class VirtualHouse.
     */
+
    @Test
    public void testRemove() {
       System.out.println("Test Remove()\n--Graphics and therefore not tested");
@@ -51,6 +53,7 @@ public class VirtualHouseTest {
    /**
     * Test of Vacuum method, of class VirtualHouse.
     */
+
    @Test
    public void testVacuum() {
       System.out.println("Test Vacuum()");
@@ -74,6 +77,7 @@ public class VirtualHouseTest {
    /**
     * Test of Move method, of class VirtualHouse.
     */
+
    @Test
    public void testMove() {
       System.out.println("Test Move()");
@@ -134,6 +138,7 @@ public class VirtualHouseTest {
    /**
     * Test of GetInitialLocation method, of class VirtualHouse.
     */
+
    @Test
    public void testGetInitialLocation() {
       System.out.println("Test GetInitialLocation()");
@@ -141,11 +146,13 @@ public class VirtualHouseTest {
       VirtualHouse instance = new VirtualHouse(true);
       instance.GetInitialLocation(si);
       /*check if initial location is at 0,0 where charge station is located*/
+
       System.out.println("--Give it the first time");
       assertEquals(si.StartingXCoord, 0);
       assertEquals(si.StartingYCoord, 0);
       instance.GetInitialLocation(si);
       /*verify that the second time a radically bad value is passed*/
+
       System.out.println("--Give garbage second time");
       instance.GetInitialLocation(si);
       assertEquals(si.StartingXCoord, Integer.MAX_VALUE);
@@ -155,6 +162,7 @@ public class VirtualHouseTest {
    /**
     * Test of SensorInformation method, of class VirtualHouse.
     */
+
    @Test
    public void testSensorInformation() {
       System.out.println("Test SensorInformation()");
@@ -166,6 +174,7 @@ public class VirtualHouseTest {
       direction w = direction.WEST;
 
       /*move around the very small test house and verify sensor information*/
+
       System.out.println("--Test starting cell of 0,0");
       instance.SensorInformation(tempSI);
       assertEquals(tempSI.atChargingStation, true);
@@ -207,3 +216,4 @@ public class VirtualHouseTest {
       assertEquals(tempSI.features[w.index()], feature.OPEN);
    }
 }
+

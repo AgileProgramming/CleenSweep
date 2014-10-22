@@ -1,4 +1,4 @@
-package Source;
+package source.sensorsimulator;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

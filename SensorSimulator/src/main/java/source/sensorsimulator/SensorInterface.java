@@ -1,4 +1,4 @@
-package Source;
+package source.sensorsimulator;
 
 /**
  * SE-359/459 Clean Sweep Robotic Vacuum Cleaner Team Project

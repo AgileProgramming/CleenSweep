@@ -1,8 +1,8 @@
-package Source;
+package source.sensorsimulator;
 
-import Source.SensorInterface.direction;
-import Source.SensorInterface.feature;
-import Source.SensorInterface.floorType;
+import source.sensorsimulator.SensorInterface.direction;
+import source.sensorsimulator.SensorInterface.feature;
+import source.sensorsimulator.SensorInterface.floorType;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

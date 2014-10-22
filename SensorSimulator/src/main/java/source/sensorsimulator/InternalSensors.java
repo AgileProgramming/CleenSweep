@@ -1,6 +1,6 @@
-package Source;
+package source.sensorsimulator;
 
-import Source.SensorInterface.floorType;
+import source.sensorsimulator.SensorInterface.floorType;
 
 /**
  * SE-359/459 Clean Sweep Robotic Vacuum Cleaner Team Project

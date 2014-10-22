@@ -1,13 +1,16 @@
-package Source;
+package source.controlsystem;
 
-import Source.SensorInterface.direction;
-import Source.SensorInterface.feature;
+import source.sensorsimulator.SensorInterface.direction;
+import source.sensorsimulator.SensorInterface.feature;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import source.sensorsimulator.InternalSensors;
+import source.sensorsimulator.SensorInterface;
+import source.sensorsimulator.VirtualHouse;
 
 /**
  * SE-359/459 Clean Sweep Robotic Vacuum Cleaner Team Project

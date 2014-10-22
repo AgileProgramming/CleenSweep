@@ -1,4 +1,6 @@
-package Source;
+package source.controlsystem;
+
+import source.sensorsimulator.VirtualHouse;
 
 /**
  * SE-359/459 Clean Sweep Robotic Vacuum Cleaner Team Project
