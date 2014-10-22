@@ -1,4 +1,4 @@
-package source.sensorsimulator;
+package source.controlsystem;
 
 import source.sensorsimulator.SensorInterface.floorType;
 import org.junit.After;
@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * SE-359/459 Clean Sweep Robotic Vacuum Cleaner Team Project
  *
- * JUnit test for InternalSensors which tracks battery life and dust bing capacity
+ * JUnit test for BatteryAndDirtBin which tracks battery life and dirt capacity
  * 
  * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
  * @version     I2
@@ -19,9 +19,9 @@ import static org.junit.Assert.*;
  */
 
 
-public class InternalSensorsTest {
+public class BatteryAndDirtBinTest {
 
-   public InternalSensorsTest() {
+   public BatteryAndDirtBinTest() {
    }
 
    @BeforeClass
@@ -41,14 +41,14 @@ public class InternalSensorsTest {
    }
 
    /**
-    * Test of moved method, of class InternalSensors.
+    * Test of moved method, of class BatteryAndDirtBin.
     */
 
    @Test
    public void testMoved() {
       System.out.println("Test moved()");
       floorType newFloorType = floorType.BareFloor;
-      InternalSensors instance = new InternalSensors(newFloorType);
+      BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       System.out.println("--verify battery reduction for bare to bare");
       instance.moved(newFloorType); //500 - 10 = 490
       assertEquals(instance.charge(), 490);
@@ -75,7 +75,7 @@ public class InternalSensorsTest {
    }
 
    /**
-    * Test of swept method, of class InternalSensors.
+    * Test of swept method, of class BatteryAndDirtBin.
     */
 
    @Test
@@ -83,23 +83,23 @@ public class InternalSensorsTest {
       System.out.println("Test swept()");
       System.out.println("--verify battery reduction 3 floor types");
       floorType newFloorType = floorType.BareFloor;
-      InternalSensors instancea = new InternalSensors(newFloorType);
+      BatteryAndDirtBin instancea = new BatteryAndDirtBin(newFloorType);
       instancea.swept();
       assertEquals(instancea.charge(), 490);
       newFloorType = floorType.LowPileCarpet;
-      InternalSensors instanceb = new InternalSensors(newFloorType);
+      BatteryAndDirtBin instanceb = new BatteryAndDirtBin(newFloorType);
       instanceb.swept();
       assertEquals(instanceb.charge(), 480);
       newFloorType = floorType.HighPileCarpet;
-      InternalSensors instancec = new InternalSensors(newFloorType);
+      BatteryAndDirtBin instancec = new BatteryAndDirtBin(newFloorType);
       instancec.swept();
       assertEquals(instancec.charge(), 470);
       System.out.println("--verify dust bin capacity is reduced");
-      assertEquals(instancec.dustBinCapacity(), 49);
+      assertEquals(instancec.dirtBinCapacity(), 49);
    }
 
    /**
-    * Test of swept method, of class InternalSensors.
+    * Test of swept method, of class BatteryAndDirtBin.
     */
 
    @Test
@@ -107,7 +107,7 @@ public class InternalSensorsTest {
       System.out.println("Test swept(floortype)");
       System.out.println("--verify battery reduction 3 floor types");
       floorType newFloorType = floorType.HighPileCarpet;
-      InternalSensors instance = new InternalSensors(newFloorType);
+      BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       newFloorType = floorType.BareFloor;
       instance.swept(newFloorType);
       assertEquals(instance.charge(), 490);
@@ -118,36 +118,36 @@ public class InternalSensorsTest {
       instance.swept(newFloorType);
       assertEquals(instance.charge(), 440);
       System.out.println("--verify dust bin capacity is reduced");
-      assertEquals(instance.dustBinCapacity(), 47);
+      assertEquals(instance.dirtBinCapacity(), 47);
    }
 
    /**
-    * Test of emptyDustBin method, of class InternalSensors.
+    * Test of emptyDustBin method, of class BatteryAndDirtBin.
     */
 
    @Test
    public void testEmptyDustBin() {
       System.out.println("Test emptyDustBin()");
       floorType newFloorType = floorType.HighPileCarpet;
-      InternalSensors instance = new InternalSensors(newFloorType);
+      BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       instance.swept();
       instance.swept();
       instance.swept();
       instance.swept();
-      assertEquals(instance.dustBinCapacity(), 46);
-      instance.emptyDustBin();
-      assertEquals(instance.dustBinCapacity(), 50);
+      assertEquals(instance.dirtBinCapacity(), 46);
+      instance.emptyDirtBin();
+      assertEquals(instance.dirtBinCapacity(), 50);
    }
 
    /**
-    * Test of chargeBattery method, of class InternalSensors.
+    * Test of chargeBattery method, of class BatteryAndDirtBin.
     */
 
    @Test
    public void testChargeBattery() {
       System.out.println("Test chargeBattery()");
       floorType newFloorType = floorType.HighPileCarpet;
-      InternalSensors instance = new InternalSensors(newFloorType);
+      BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       instance.swept();
       instance.swept();
       instance.swept();
@@ -158,35 +158,35 @@ public class InternalSensorsTest {
    }
 
    /**
-    * Test of dustBinCapacity method, of class InternalSensors.
+    * Test of dustBinCapacity method, of class BatteryAndDirtBin.
     */
 
    @Test
    public void testDustBinCapacity() {
       System.out.println("Test dustBinCapacity()");
       floorType newFloorType = floorType.HighPileCarpet;
-      InternalSensors instance = new InternalSensors(newFloorType);
+      BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       instance.swept();
       instance.swept();
       instance.swept();
       instance.swept();
       instance.swept();
-      assertEquals(instance.dustBinCapacity(), 45);
+      assertEquals(instance.dirtBinCapacity(), 45);
       for (int i = 0; i < 50; i++) {
          instance.swept();
       }
-      assertEquals(instance.dustBinCapacity(), 0);
+      assertEquals(instance.dirtBinCapacity(), 0);
    }
 
    /**
-    * Test of Charge method, of class InternalSensors.
+    * Test of Charge method, of class BatteryAndDirtBin.
     */
 
    @Test
    public void testCharge() {
       System.out.println("Test charge()");
       floorType newFloorType = floorType.HighPileCarpet;
-      InternalSensors instance = new InternalSensors(newFloorType);
+      BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       instance.swept();
       instance.swept();
       instance.swept();

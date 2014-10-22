@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import source.sensorsimulator.InternalSensors;
 import source.sensorsimulator.SensorInterface;
 import source.sensorsimulator.VirtualHouse;
 
@@ -53,12 +52,13 @@ public class CleanSweepRobot {
       CHECK_SENSORS,
       MOVE;
    }
+   
    /*Private Variables*/
    private VirtualHouse vH;
    private LinkedList<CellDescription> internalMap;
    private LinkedList<LocationOfNotVisited> destinations;
    private LinkedList<Tasks> tasksCompleted;
-   private InternalSensors guages;
+   private BatteryAndDirtBin guages;
    private int currentX;
    private int currentY;
    private boolean stuck;
@@ -79,9 +79,9 @@ public class CleanSweepRobot {
       vH = virtualHouse;
 
       /*instantiate a few lists*/
-      internalMap = new LinkedList<CellDescription>();
-      destinations = new LinkedList<LocationOfNotVisited>();
-      tasksCompleted = new LinkedList<Tasks>();
+      internalMap = new LinkedList<>();
+      destinations = new LinkedList<>();
+      tasksCompleted = new LinkedList<>();
 
       /*get som initial information from the sensor simulator*/
       SensorInterface ci = new SensorInterface();
@@ -91,7 +91,7 @@ public class CleanSweepRobot {
       vH.SensorInformation(ci);
 
       /*setup internal sensors*/
-      guages = new InternalSensors(ci.floor);
+      guages = new BatteryAndDirtBin(ci.floor);
 
       /*intialize other variables*/
       stuck = false;
@@ -100,11 +100,11 @@ public class CleanSweepRobot {
       /**
     * Overloaded Constructor for CleanSweepRobot                        
     * <p>
-    * used for unit testing
+    * Used for unit testing
     *
     * @param  VirtualHouse virtualHouse - A Sensor Simulator reference
-    * @param  VirtualHouse virtualHouse - A Sensor Simulator reference
-    * @param  VirtualHouse virtualHouse - A Sensor Simulator reference
+    * @param  int y - starting location of robot
+    * @param  int y - starting location of robot
     */
    public CleanSweepRobot(VirtualHouse virtualHouse, int x, int y) {
 
@@ -112,9 +112,9 @@ public class CleanSweepRobot {
       vH = virtualHouse;
 
       /*instantiate a few lists*/
-      internalMap = new LinkedList<CellDescription>();
-      destinations = new LinkedList<LocationOfNotVisited>();
-      tasksCompleted = new LinkedList<Tasks>();
+      internalMap = new LinkedList<>();
+      destinations = new LinkedList<>();
+      tasksCompleted = new LinkedList<>();
 
       /*get som initial information from the sensor simulator*/
       SensorInterface ci = new SensorInterface();
@@ -123,7 +123,7 @@ public class CleanSweepRobot {
       vH.SensorInformation(ci);
 
       /*setup internal sensors*/
-      guages = new InternalSensors(ci.floor);
+      guages = new BatteryAndDirtBin(ci.floor);
 
       /*intialize other variables*/
       stuck = false;
@@ -246,7 +246,7 @@ public class CleanSweepRobot {
       for (direction d : direction.values()) {
          /*Check each of 4 directions*/
          if (Current.sI.features[d.index()] == feature.OPEN) {
-            /*If there is not an obsitcle north then check space has
+            /*If there is not an obsitcle in each direction then check space has
              * already been visited*/
             WantToGoThere = true;
             for (int i = 0; i < internalMap.size(); i++) {

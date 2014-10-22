@@ -63,7 +63,7 @@ public class VirtualHouse {
       int maxDim = 0;
 
       hasSentInitialLocation = false;
-      floorPlan = new LinkedList<CellDescription>();
+      floorPlan = new LinkedList<>();
 
       /*Get user input, xml file name and if the user wants the graphic*/
 
@@ -101,12 +101,11 @@ public class VirtualHouse {
       }
 
       /*Fead file and put information in to a list for future reference*/
-      maxDim = GetFloorPlan(inputFile);
+      GetFloorPlan(inputFile);
 
       /*Start graphics if desired*/
       if (useGraphics) {
-         picture = new FloorGraphics(maxDim, maxDim, currentCell.locX,
-                 currentCell.locY, floorPlan);
+         picture = new FloorGraphics(floorPlan);
          picture.UpdateGraphics();
       }
    }
@@ -120,7 +119,7 @@ public class VirtualHouse {
    public VirtualHouse(boolean JUnitTesting) {
       useGraphics = false;
       hasSentInitialLocation = false;
-      floorPlan = new LinkedList<CellDescription>();
+      floorPlan = new LinkedList<>();
       GetFloorPlan("JUnitTestFloorPlan.xml");
    }
 
@@ -132,12 +131,9 @@ public class VirtualHouse {
     * a CellDescription that is added to the floorPlan list
     *
     * @param  String inputFile - name of .xml file that contains floor plan
-    * @return true an integer that is the maximum dimension in any direction
-    *              of the floor plan.
     */
-   private int GetFloorPlan(String inputFile) {
+   private void GetFloorPlan(String inputFile) {
       String line = null;
-      int maxDim = 0;
       BufferedReader br = null;
       File f = new File(inputFile);
       try {
@@ -165,9 +161,6 @@ public class VirtualHouse {
             B = line.indexOf("'", A);
             try {
                CD.locX = Integer.parseInt(line.substring(A, B));
-               if (CD.locX > maxDim) {
-                  maxDim = CD.locX;
-               }
             } catch (Exception e) {
                logger.log(Level.WARNING, "Bad input file format", e);
             }
@@ -176,22 +169,23 @@ public class VirtualHouse {
             B = line.indexOf("'", A);
             try {
                CD.locY = Integer.parseInt(line.substring(A, B));
-               if (CD.locY > maxDim) {
-                  maxDim = CD.locY;
-               }
             } catch (Exception e) {
                logger.log(Level.WARNING, "Bad input file format", e);
             }
             /*get surface*/
             A = line.indexOf("ss") + 4;
             B = line.indexOf("'", A);
-
-            if ("4".equals(line.substring(A, B))) {
-               CD.sI.floor = floorType.HighPileCarpet;
-            } else if ("2".equals(line.substring(A, B))) {
-               CD.sI.floor = floorType.LowPileCarpet;
-            } else {
-               CD.sI.floor = floorType.BareFloor;
+            switch (line.substring(A, B))
+            {
+               case "4":
+                  CD.sI.floor = floorType.HighPileCarpet;
+                  break;
+               case "2":
+                  CD.sI.floor = floorType.LowPileCarpet;
+                  break;
+               default:
+                  CD.sI.floor = floorType.BareFloor;
+                  break;
             }
             /*get amount of dirt of floor*/
             A = line.indexOf("ds") + 4;
@@ -213,37 +207,56 @@ public class VirtualHouse {
             direction w = direction.WEST;
             A = line.indexOf("ps") + 4;
             String a = line.substring(A, A + 1);
-
-            if (line.substring(A, A + 1).equals("1")) {
-               CD.sI.features[e.index()] = SensorInterface.feature.OPEN;
-            } else if (line.substring(A, A + 1).equals("2")) {
-               CD.sI.features[e.index()] = SensorInterface.feature.OBSTICLE;
-            } else {
-               CD.sI.features[e.index()] = SensorInterface.feature.STAIRS;
+            switch (line.substring(A, A + 1))
+            {
+               case "1":
+                  CD.sI.features[e.index()] = SensorInterface.feature.OPEN;
+                  break;
+               case "2":
+                  CD.sI.features[e.index()] = SensorInterface.feature.OBSTICLE;
+                  break;
+               default:
+                  CD.sI.features[e.index()] = SensorInterface.feature.STAIRS;
+                  break;
             }
             A++;
-            if (line.substring(A, A + 1).equals("1")) {
-               CD.sI.features[w.index()] = SensorInterface.feature.OPEN;
-            } else if (line.substring(A, A + 1).equals("2")) {
-               CD.sI.features[w.index()] = SensorInterface.feature.OBSTICLE;
-            } else {
-               CD.sI.features[w.index()] = SensorInterface.feature.STAIRS;
+            switch (line.substring(A, A + 1))
+            {
+               case "1":
+                  CD.sI.features[w.index()] = SensorInterface.feature.OPEN;
+                  break;
+               case "2":
+                  CD.sI.features[w.index()] = SensorInterface.feature.OBSTICLE;
+                  break;
+               default:
+                  CD.sI.features[w.index()] = SensorInterface.feature.STAIRS;
+                  break;
             }
             A++;
-            if (line.substring(A, A + 1).equals("1")) {
-               CD.sI.features[n.index()] = SensorInterface.feature.OPEN;
-            } else if (line.substring(A, A + 1).equals("2")) {
-               CD.sI.features[n.index()] = SensorInterface.feature.OBSTICLE;
-            } else {
-               CD.sI.features[n.index()] = SensorInterface.feature.STAIRS;
+            switch (line.substring(A, A + 1))
+            {
+               case "1":
+                  CD.sI.features[n.index()] = SensorInterface.feature.OPEN;
+                  break;
+               case "2":
+                  CD.sI.features[n.index()] = SensorInterface.feature.OBSTICLE;
+                  break;
+               default:
+                  CD.sI.features[n.index()] = SensorInterface.feature.STAIRS;
+                  break;
             }
             A++;
-            if (line.substring(A, A + 1).equals("1")) {
-               CD.sI.features[s.index()] = SensorInterface.feature.OPEN;
-            } else if (line.substring(A, A + 1).equals("2")) {
-               CD.sI.features[s.index()] = SensorInterface.feature.OBSTICLE;
-            } else {
-               CD.sI.features[s.index()] = SensorInterface.feature.STAIRS;
+            switch (line.substring(A, A + 1))
+            {
+               case "1":
+                  CD.sI.features[s.index()] = SensorInterface.feature.OPEN;
+                  break;
+               case "2":
+                  CD.sI.features[s.index()] = SensorInterface.feature.OBSTICLE;
+                  break;
+               default:
+                  CD.sI.features[s.index()] = SensorInterface.feature.STAIRS;
+                  break;
             }
             A++;
             /*check if it is charging station*/
@@ -266,7 +279,6 @@ public class VirtualHouse {
       } catch (Exception e) {
          logger.log(Level.WARNING, "Cannot close file", e);
       }
-      return maxDim;
    }
 
    /**

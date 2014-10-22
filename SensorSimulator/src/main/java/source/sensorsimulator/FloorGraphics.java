@@ -19,9 +19,9 @@ import javax.swing.JPanel;
  */
 public class FloorGraphics {
 
-   private JFrame FloorFrame;
-   private BufferedImage FloorBI;
-   private FloorJPanel CSJP;
+   private JFrame floorFrame;
+   private BufferedImage floorBI;
+   private FloorJPanel cSJP;
    private int floorYdimension;
    private int floorXdimension;
    private List<VirtualHouse.CellDescription> Floor;
@@ -30,19 +30,27 @@ public class FloorGraphics {
     * Graphic instatiation, I'm not going into detail since this
     * is not actually part of the project requriements
     */
-   public FloorGraphics(int x, int y, int ix, int iy, List<VirtualHouse.CellDescription> FP) {
-      Floor = FP;
-      floorXdimension = x;
-      floorYdimension = y;
-      CSJP = new FloorJPanel();
-      FloorBI = new BufferedImage((floorXdimension * 50), (floorYdimension * 50), BufferedImage.TYPE_BYTE_BINARY);
-      CSJP.paintComponent(FloorBI.createGraphics());
-      FloorFrame = new JFrame("Clean Sweep Tracker");
-      FloorFrame.isAlwaysOnTop();
-      FloorFrame.setMinimumSize(new Dimension(floorXdimension * 60 + 16, floorYdimension * 60 + 38));
-      FloorFrame.add(CSJP);
-      FloorFrame.pack();
-      FloorFrame.setVisible(true);
+   public FloorGraphics(List<VirtualHouse.CellDescription> fp) {
+      Floor = fp;
+      floorXdimension = 0;
+      floorYdimension = 0;
+      for ( int i = 0; i < fp.size(); i ++ ) {
+         if ( fp.get(i).locX > floorXdimension ){
+            floorXdimension = fp.get(i).locX; 
+         }
+         if ( fp.get(i).locY > floorYdimension ){
+            floorYdimension = fp.get(i).locY; 
+         }
+      }
+      cSJP = new FloorJPanel();
+      floorBI = new BufferedImage((floorXdimension * 50), (floorYdimension * 50), BufferedImage.TYPE_BYTE_BINARY);
+      cSJP.paintComponent(floorBI.createGraphics());
+      floorFrame = new JFrame("Clean Sweep Tracker");
+      floorFrame.isAlwaysOnTop();
+      floorFrame.setMinimumSize(new Dimension(floorXdimension * 60 + 16, floorYdimension * 60 + 38));
+      floorFrame.add(cSJP);
+      floorFrame.pack();
+      floorFrame.setVisible(true);
       try {
          Thread.sleep(1000);
       } catch (Exception e) {
@@ -105,8 +113,8 @@ public class FloorGraphics {
          Thread.sleep(250);
       } catch (Exception e) {
       }
-      CSJP.paintComponent(FloorBI.createGraphics());
-      FloorFrame.repaint();
+      cSJP.paintComponent(floorBI.createGraphics());
+      floorFrame.repaint();
    }
 
    /*
@@ -117,6 +125,6 @@ public class FloorGraphics {
          Thread.sleep(2000);
       } catch (Exception e) {
       }
-      FloorFrame.dispose();
+      floorFrame.dispose();
    }
 }
