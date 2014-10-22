@@ -81,7 +81,7 @@
 81 <cell xs='9' ys='4' ss='1' ps='2111 ' ds='1' cs='0' />
 82 <cell xs='6' ys='5' ss='1' ps='1211 ' ds='1' cs='0' />
 83 <cell xs='7' ys='5' ss='4' ps='1111 ' ds='1' cs='0' />
-84 <cell xs='8' ys='5' ss='4' ps='1111 ' ds='1' cs='0' />
+84 <cell xs='8' ys='5' ss='4' ps='1111 ' ds='10' cs='0' />
 85 <cell xs='9' ys='5' ss='1' ps='2111 ' ds='1' cs='0' />
 86 <cell xs='6' ys='6' ss='1' ps='1211 ' ds='1' cs='0' />
 87 <cell xs='7' ys='6' ss='1' ps='1111 ' ds='1' cs='0' />

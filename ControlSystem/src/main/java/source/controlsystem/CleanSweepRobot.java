@@ -19,40 +19,45 @@ import source.sensorsimulator.VirtualHouse;
  * required functionality of the Clean Sweep. 
  * 
  * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
- * @version     I2
- * @date        25Sep2014
+ * @version     I3
+ * @date        03Nov2014
  */
-public class CleanSweepRobot {
+public class CleanSweepRobot
+{
 
-   private class LocationOfNotVisited {
+   private class LocationOfNotVisited
+   {
 
       public int notVisitedX;
       public int notVisitedY;
 
-      public LocationOfNotVisited(int x, int y) {
+      public LocationOfNotVisited(int x, int y)
+      {
          notVisitedX = x;
          notVisitedY = y;
       }
    }
 
-   public class CellDescription {
+   static public class CellDescription
+   {
 
       public SensorInterface sI;
       public int locX;
       public int locY;
 
-      public CellDescription() {
+      public CellDescription()
+      {
          sI = new SensorInterface();
       }
    }
 
-   private enum Tasks {
+   private enum Tasks
+   {
 
       SWEEP,
       CHECK_SENSORS,
       MOVE;
    }
-   
    /*Private Variables*/
    private VirtualHouse vH;
    private LinkedList<CellDescription> internalMap;
@@ -61,6 +66,8 @@ public class CleanSweepRobot {
    private BatteryAndDirtBin guages;
    private int currentX;
    private int currentY;
+   private int startingX;
+   private int startingY;
    private boolean stuck;
    /*Exception log for IO*/
    private static final Logger logger = Logger.getLogger("Exceptions");
@@ -73,7 +80,8 @@ public class CleanSweepRobot {
     *
     * @param  VirtualHouse virtualHouse - A Sensor Simulator reference
     */
-   public CleanSweepRobot(VirtualHouse virtualHouse) {
+   public CleanSweepRobot(VirtualHouse virtualHouse)
+   {
 
       /*save a reference to the sensor simulator*/
       vH = virtualHouse;
@@ -87,7 +95,9 @@ public class CleanSweepRobot {
       SensorInterface ci = new SensorInterface();
       vH.GetInitialLocation(ci);
       currentX = ci.StartingXCoord;
+      startingX = ci.StartingXCoord;
       currentY = ci.StartingYCoord;
+      startingY = ci.StartingYCoord;
       vH.SensorInformation(ci);
 
       /*setup internal sensors*/
@@ -97,7 +107,7 @@ public class CleanSweepRobot {
       stuck = false;
    }
 
-      /**
+   /**
     * Overloaded Constructor for CleanSweepRobot                        
     * <p>
     * Used for unit testing
@@ -106,7 +116,8 @@ public class CleanSweepRobot {
     * @param  int y - starting location of robot
     * @param  int y - starting location of robot
     */
-   public CleanSweepRobot(VirtualHouse virtualHouse, int x, int y) {
+   public CleanSweepRobot(VirtualHouse virtualHouse, int x, int y)
+   {
 
       /*save a reference to the sensor simulator*/
       vH = virtualHouse;
@@ -128,7 +139,7 @@ public class CleanSweepRobot {
       /*intialize other variables*/
       stuck = false;
    }
-   
+
    /**
     * Update the Clean Sweep Control System                        
     * <p>
@@ -140,38 +151,44 @@ public class CleanSweepRobot {
     *
     * @return false if all locations have been visited, true if more 
     */
-   public boolean cleanSweepUpdate() {
+   public boolean cleanSweepUpdate()
+   {
       CellDescription Current = new CellDescription();
 
       /*Check Sensors*/
       tasksCompleted.addLast(Tasks.CHECK_SENSORS);
       vH.SensorInformation(Current.sI);
       Current.locX = currentX;
-      Current.locY = currentY;
+      Current.locY = currentY;    
+ 
+      /*Save cell description*/
+      addToInternalMap(Current);     
 
       /*Sweep if necessary*/
-      while (Current.sI.dirtPresent) {
+      while (Current.sI.dirtPresent)
+      {
          vH.Vacuum();
          tasksCompleted.addLast(Tasks.SWEEP);
          guages.swept();
+         tripToChargingStationIfNecessary();
          tasksCompleted.addLast(Tasks.CHECK_SENSORS);
          vH.SensorInformation(Current.sI);
       }
-
-      /*Save cell description*/
-      addToInternalMap(Current);
 
       /*Update destinations*/
       updateNotVisitedList(Current);
 
       /*Move Clean Sweep*/
-      if (destinations.size() > 0) {
+      if (destinations.size() > 0)
+      {
          tasksCompleted.addLast(Tasks.MOVE);
          moveCleanSweep(Current);
          SensorInterface ci = new SensorInterface();
          vH.SensorInformation(ci);
          guages.moved(ci.floor);
-      } else {
+      }
+      else
+      {
          /*All done so save internal map to file*/
          writeInternalMap();
 
@@ -192,11 +209,14 @@ public class CleanSweepRobot {
     *
     * @param  CellDescription Current- name of cell from which to move
     */
-   private void moveCleanSweep(CellDescription Current) {
-      if (stuck) {
+   private void moveCleanSweep(CellDescription Current)
+   {
+      if (stuck)
+      {
          /* The size will always be greater than 1 if the robot is stuck
          but should check anyway */
-         if (destinations.size() > 1) {
+         if (destinations.size() > 1)
+         {
             destinations.addLast(destinations.get(destinations.size() - 2));
          }
       }
@@ -207,14 +227,17 @@ public class CleanSweepRobot {
 
       /* Check in all 4 directions and move if desired and possible */
       stuck = true;
-      for (SensorInterface.direction d : SensorInterface.direction.values()) {
+      for (SensorInterface.direction d : SensorInterface.direction.values())
+      {
          if ((((targety > Current.locY) && (d.index() == direction.NORTH.index()))
                  || ((targetx > Current.locX) && (d.index() == direction.EAST.index()))
                  || ((targety < Current.locY) && (d.index() == direction.SOUTH.index()))
                  || ((targetx < Current.locX) && (d.index() == direction.WEST.index())))
-                 && (Current.sI.features[d.index()] == SensorInterface.feature.OPEN)) {
+                 && (Current.sI.features[d.index()] == SensorInterface.feature.OPEN))
+         {
             /*If the mess above is true then actually move the darn thing*/
-            if (vH.Move(Current.locX + d.xOffset(), Current.locY + d.yOffset())) {
+            if (vH.Move(Current.locX + d.xOffset(), Current.locY + d.yOffset()))
+            {
                currentX = Current.locX + d.xOffset();
                currentY = Current.locY + d.yOffset();
                stuck = false;
@@ -227,7 +250,8 @@ public class CleanSweepRobot {
        */
       if (currentX
               == destinations.getLast().notVisitedX
-              && currentX == destinations.getLast().notVisitedX) {
+              && currentX == destinations.getLast().notVisitedX)
+      {
          destinations.removeLast();
       }
    }
@@ -241,27 +265,35 @@ public class CleanSweepRobot {
     *
     * @param  CellDescription Current- current cell
     */
-   private void updateNotVisitedList(CellDescription Current) {
+   private void updateNotVisitedList(CellDescription Current)
+   {
       boolean WantToGoThere;
-      for (direction d : direction.values()) {
+      for (direction d : direction.values())
+      {
          /*Check each of 4 directions*/
-         if (Current.sI.features[d.index()] == feature.OPEN) {
+         if (Current.sI.features[d.index()] == feature.OPEN)
+         {
             /*If there is not an obsitcle in each direction then check space has
              * already been visited*/
             WantToGoThere = true;
-            for (int i = 0; i < internalMap.size(); i++) {
+            for (int i = 0; i < internalMap.size(); i++)
+            {
                if ((Current.locX + d.xOffset()) == internalMap.get(i).locX
-                       && (Current.locY + d.yOffset()) == internalMap.get(i).locY) {
+                       && (Current.locY + d.yOffset()) == internalMap.get(i).locY)
+               {
                   WantToGoThere = false;
                   break;
                }
             }
-            if (WantToGoThere) {
+            if (WantToGoThere)
+            {
                /*If here then there is no obsitcle and not been visited
                so remove any old occurances of that location*/
-               for (int i = 0; i < destinations.size(); i++) {
+               for (int i = 0; i < destinations.size(); i++)
+               {
                   if ((Current.locX + d.xOffset()) == destinations.get(i).notVisitedX
-                          && (Current.locY + d.yOffset()) == destinations.get(i).notVisitedY) {
+                          && (Current.locY + d.yOffset()) == destinations.get(i).notVisitedY)
+                  {
                      destinations.remove(i);
                      break;
                   }
@@ -282,16 +314,20 @@ public class CleanSweepRobot {
     *
     * @param  CellDescription Current- name of cell to add to the floor plan
     */
-   private void addToInternalMap(CellDescription Current) {
+   private void addToInternalMap(CellDescription Current)
+   {
       boolean isNewLocation = true;
-      for (int i = 0; i < internalMap.size(); i++) {
+      for (int i = 0; i < internalMap.size(); i++)
+      {
          if (Current.locX == internalMap.get(i).locX
-                 && Current.locY == internalMap.get(i).locY) {
+                 && Current.locY == internalMap.get(i).locY)
+         {
             isNewLocation = false;
             break;
          }
       }
-      if (isNewLocation) {
+      if (isNewLocation)
+      {
          internalMap.add(Current);
       }
    }
@@ -302,22 +338,31 @@ public class CleanSweepRobot {
     * This method writes the saved internal map to a file called "FloorPlanDump.xml" in
     * the same format as the project input file.
     */
-   private void writeInternalMap() {
+   private void writeInternalMap()
+   {
       BufferedWriter bw = null;
       File f = new File("FloorPlanDump.xml");
-      try {
+      try
+      {
          bw = new BufferedWriter(new FileWriter(f));
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          logger.log(Level.WARNING, "File not created", e);
       }
-      try {
+      try
+      {
          bw.write("<FloorPlanDump>\n");
          int chargeStation;
-         for (int i = 0; i < internalMap.size(); i++) {
-            if (internalMap.get(i).sI.atChargingStation) {
+         for (int i = 0; i < internalMap.size(); i++)
+         {
+            if (internalMap.get(i).sI.atChargingStation)
+            {
                chargeStation = 1;
 
-            } else {
+            }
+            else
+            {
                chargeStation = 0;
             }
             bw.write("<cell xs='" + internalMap.get(i).locX
@@ -332,7 +377,9 @@ public class CleanSweepRobot {
          }
          bw.write("</ FloorPlanDump>");
          bw.close();
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          logger.log(Level.WARNING, "Cannot Write to File", e);
       }
    }
@@ -342,22 +389,40 @@ public class CleanSweepRobot {
     * <p>
     * This method writes the activity log to a file called ActivityLog.txt.
     */
-   private void writeTaskList() {
+   private void writeTaskList()
+   {
       BufferedWriter bw = null;
       File f = new File("ActivityLog.txt");
-      try {
+      try
+      {
          bw = new BufferedWriter(new FileWriter(f));
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          logger.log(Level.WARNING, "File not created", e);
       }
-      try {
+      try
+      {
 
-         for (int i = 0; i < tasksCompleted.size(); i++) {
+         for (int i = 0; i < tasksCompleted.size(); i++)
+         {
             bw.write(tasksCompleted.get(i).name() + ",\n");
          }
          bw.close();
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          logger.log(Level.WARNING, "Cannot Write to File", e);
+      }
+   }
+
+   private void tripToChargingStationIfNecessary()
+   {
+      if ( guages.dirtBinCapacity() == 0 )
+      {
+      AStarPathFinder pf = new AStarPathFinder();
+      pf.shortestPath(currentX, currentY, startingX, startingY, internalMap);
+      guages.emptyDirtBin();
       }
    }
 }
