@@ -25,13 +25,13 @@ import source.sensorsimulator.VirtualHouse;
 public class CleanSweepRobot
 {
 
-   private class LocationOfNotVisited
+   static class CellToVisit
    {
 
       public int notVisitedX;
       public int notVisitedY;
 
-      public LocationOfNotVisited(int x, int y)
+      public CellToVisit(int x, int y)
       {
          notVisitedX = x;
          notVisitedY = y;
@@ -61,7 +61,7 @@ public class CleanSweepRobot
    /*Private Variables*/
    private VirtualHouse vH;
    private LinkedList<CellDescription> internalMap;
-   private LinkedList<LocationOfNotVisited> destinations;
+   private LinkedList<CellToVisit> destinations;
    private LinkedList<Tasks> tasksCompleted;
    private BatteryAndDirtBin guages;
    private int currentX;
@@ -162,7 +162,13 @@ public class CleanSweepRobot
       Current.locY = currentY;    
  
       /*Save cell description*/
-      addToInternalMap(Current);     
+      addToInternalMap(Current);  
+      
+      /*We ahve moved, check battery*/
+      tripToChargingStationIfNecessary();
+           
+      /*Update destinations*/
+      updateNotVisitedList(Current);
 
       /*Sweep if necessary*/
       while (Current.sI.dirtPresent)
@@ -174,9 +180,6 @@ public class CleanSweepRobot
          tasksCompleted.addLast(Tasks.CHECK_SENSORS);
          vH.SensorInformation(Current.sI);
       }
-
-      /*Update destinations*/
-      updateNotVisitedList(Current);
 
       /*Move Clean Sweep*/
       if (destinations.size() > 0)
@@ -299,7 +302,7 @@ public class CleanSweepRobot
                   }
                }
                /*Add to places that need visited*/
-               destinations.add(new LocationOfNotVisited((Current.locX + d.xOffset()), (Current.locY + d.yOffset())));
+               destinations.add(new CellToVisit((Current.locX + d.xOffset()), (Current.locY + d.yOffset())));
             }
          }
       }
@@ -416,13 +419,33 @@ public class CleanSweepRobot
       }
    }
 
+   
+  /**
+    * Move robot to and back from charging station                      
+    * <p>
+    * This method decides if the robot needs to go to the charging station 
+    * based on current dirt bin capacity and battery life. It will calculate the
+    * battery required to return to the charging station to insure it always 
+    * reaches the stations
+    * 
+    * TODO need to add actual movement, currently there are only calcualtions
+    */
    private void tripToChargingStationIfNecessary()
    {
-      if ( guages.dirtBinCapacity() == 0 )
-      {
       AStarPathFinder pf = new AStarPathFinder();
-      pf.shortestPath(currentX, currentY, startingX, startingY, internalMap);
+      
+      int battRequiredToGetBack = 
+              pf.calculateCharge(currentX, currentY, startingX, startingY, internalMap);
+      if ( ( guages.dirtBinCapacity() == 0 ) || 
+                        ( ( battRequiredToGetBack + 3) > guages.charge() ) )
+      {
+
+      pf.shortestPath(currentX, currentY, startingX, startingY, internalMap, true);
+      
+      /*will be at charging station, empty bin, recharge and find way back*/
       guages.emptyDirtBin();
+      guages.chargeBattery();
+      pf.shortestPath(currentX, currentY, startingX, startingY, internalMap, false);
       }
    }
 }

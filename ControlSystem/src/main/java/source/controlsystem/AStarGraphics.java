@@ -31,13 +31,16 @@ public class AStarGraphics{
    private LinkedList<CellDescription> knownCells;
    private LinkedList<Cell> openList;
    private LinkedList<Cell> closedList;
+   private LinkedList<CellDescription> returnPath;
    
    /*
     * Graphic instatiation, I'm not going into detail since this
     * is not actually part of the project requriements
     */
    public AStarGraphics(LinkedList<CellDescription> cd,
-                        LinkedList<Cell> ol, LinkedList<Cell> cl  ) {
+                        LinkedList<Cell> ol, LinkedList<Cell> cl,
+                        LinkedList<CellDescription> rp ) {
+      returnPath = rp;
       knownCells = cd;
       openList = ol;
       closedList = cl;
@@ -57,8 +60,8 @@ public class AStarGraphics{
       cSJP.paintComponent(floorBI.createGraphics());
       floorFrame = new JFrame("A* tracking");
       floorFrame.isAlwaysOnTop();
-      floorFrame.setMinimumSize(new Dimension(floorXdimension * 60 + 38, 
-                                                   floorYdimension * 60 + 38));
+      floorFrame.setMinimumSize(new Dimension(floorXdimension * 62 + 100, 
+                                                   floorYdimension * 62 + 100));
       floorFrame.add(cSJP);
       floorFrame.pack();
       floorFrame.setVisible(true);
@@ -111,17 +114,23 @@ public class AStarGraphics{
                g2d.drawString("Station", X + 6, Y + 35);
             }
          }
-         g2d.setColor(Color.BLUE);
+         g2d.setColor(Color.ORANGE);
          for ( int i = 0; i < openList.size(); i ++ ){
             g2d.fillRect (( openList.get(i).cd.locX* 50 + 10 ),
             ((floorYdimension * 50 + 10) - (openList.get(i).cd.locY * 50)),40,40);
          }
          
-         g2d.setColor(Color.RED);
+         g2d.setColor(Color.YELLOW);
          for ( int i = 0; i < closedList.size(); i ++ ){
             g2d.fillRect (( closedList.get(i).cd.locX* 50 + 10 ),
             ((floorYdimension * 50 + 10) - (closedList.get(i).cd.locY * 50)),40,40);
-         }         
+         }
+         
+         g2d.setColor(Color.GREEN);
+         for ( int i = 0; i < returnPath.size(); i ++ ){
+            g2d.fillRect (( returnPath.get(i).locX * 50 + 10 ),
+            ((floorYdimension * 50 + 10) - (returnPath.get(i).locY * 50)),40,40);
+         }  
       }
    }
 
@@ -130,7 +139,7 @@ public class AStarGraphics{
     */
    public void UpdateGraphics() {
       try {
-         Thread.sleep(250);
+         Thread.sleep(100);
       } catch (Exception e) {
       }
       cSJP.paintComponent(floorBI.createGraphics());
@@ -141,10 +150,6 @@ public class AStarGraphics{
     * Removes jpanel after waiting 2 seconds
     */
    public void Remove() {
-      try {
-         Thread.sleep(2000);
-      } catch (Exception e) {
-      }
       floorFrame.dispose();
    }
 }

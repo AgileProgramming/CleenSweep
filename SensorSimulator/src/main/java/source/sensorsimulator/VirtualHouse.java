@@ -25,9 +25,11 @@ import java.util.logging.Logger;
  * @version     I1
  * @date        11Sep2014
  */
-public class VirtualHouse {
+public class VirtualHouse
+{
 
-   public class CellDescription {
+   public class CellDescription
+   {
 
       public SensorInterface sI;
       public int dirt;
@@ -35,7 +37,8 @@ public class VirtualHouse {
       public int locY;
       public boolean isCurrentCell;
 
-      public CellDescription() {
+      public CellDescription()
+      {
          sI = new SensorInterface();
       }
    }
@@ -57,45 +60,34 @@ public class VirtualHouse {
     * <p>
     * The constructor also instantiates the graphics if applicable.
     */
-   public VirtualHouse() {
+   public VirtualHouse()
+   {
       String inputFile = null;
-      String line = null;
-      int maxDim = 0;
-
+      useGraphics = true;
       hasSentInitialLocation = false;
       floorPlan = new LinkedList<>();
 
       /*Get user input, xml file name and if the user wants the graphic*/
 
       BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-      for (;;) {
+      for (;;)
+      {
          System.out.println("Type Input File with floor plan (.\\floorplan.xml)");
-         try {
+         try
+         {
             inputFile = in.readLine();
-         } catch (Exception e) {
+         }
+         catch (Exception e)
+         {
             logger.log(Level.SEVERE, "Input file not found", e);
          }
-         if (inputFile.isEmpty()) {
+         if (inputFile.isEmpty())
+         {
             inputFile = "floorplan.xml";
          }
          File f = new File(inputFile);
-         if (f.canRead()) {
-            break;
-         }
-      }
-      for (;;) {
-         System.out.println("Dislay Graphics? Y/N");
-         try {
-            line = in.readLine();
-         } catch (Exception e) {
-            logger.log(Level.WARNING, "Keypad not working?", e);
-         }
-         if ("Y".equals(line) || "y".equals(line)) {
-            useGraphics = true;
-            break;
-         }
-         if ("N".equals(line) || "n".equals(line)) {
-            useGraphics = false;
+         if (f.canRead())
+         {
             break;
          }
       }
@@ -104,7 +96,8 @@ public class VirtualHouse {
       GetFloorPlan(inputFile);
 
       /*Start graphics if desired*/
-      if (useGraphics) {
+      if (useGraphics)
+      {
          picture = new FloorGraphics(floorPlan);
          picture.UpdateGraphics();
       }
@@ -116,7 +109,8 @@ public class VirtualHouse {
     * The constructor is used for JUnit testing. It reads in the test file 
     * and initializes the same variables as the regular constructor.
     */
-   public VirtualHouse(boolean JUnitTesting) {
+   public VirtualHouse(boolean JUnitTesting)
+   {
       useGraphics = false;
       hasSentInitialLocation = false;
       floorPlan = new LinkedList<>();
@@ -132,44 +126,60 @@ public class VirtualHouse {
     *
     * @param  String inputFile - name of .xml file that contains floor plan
     */
-   private void GetFloorPlan(String inputFile) {
+   private void GetFloorPlan(String inputFile)
+   {
       String line = null;
       BufferedReader br = null;
       File f = new File(inputFile);
-      try {
+      try
+      {
          br = new BufferedReader(new FileReader(f));
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          logger.log(Level.WARNING, "File not Found", e);
       }
-      for (;;) {
-         try {
+      for (;;)
+      {
+         try
+         {
             line = br.readLine();
-         } catch (Exception e) {
+         }
+         catch (Exception e)
+         {
             logger.log(Level.WARNING, "Cannot Read File", e);
          }
-         if (line == null) {
+         if (line == null)
+         {
             break;
          }
          int A;
          int B;
-         if (line.contains("cell")) {
+         if (line.contains("cell"))
+         {
             /*make new cell*/
             CellDescription CD = new CellDescription();
 
             /*get x*/
             A = line.indexOf("xs") + 4;
             B = line.indexOf("'", A);
-            try {
+            try
+            {
                CD.locX = Integer.parseInt(line.substring(A, B));
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                logger.log(Level.WARNING, "Bad input file format", e);
             }
             /*get Y*/
             A = line.indexOf("ys") + 4;
             B = line.indexOf("'", A);
-            try {
+            try
+            {
                CD.locY = Integer.parseInt(line.substring(A, B));
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                logger.log(Level.WARNING, "Bad input file format", e);
             }
             /*get surface*/
@@ -190,14 +200,20 @@ public class VirtualHouse {
             /*get amount of dirt of floor*/
             A = line.indexOf("ds") + 4;
             B = line.indexOf("'", A);
-            try {
+            try
+            {
                CD.dirt = Integer.parseInt(line.substring(A, B));
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                logger.log(Level.WARNING, "Bad input file format", e);
             }
-            if (CD.dirt > 0) {
+            if (CD.dirt > 0)
+            {
                CD.sI.dirtPresent = true;
-            } else {
+            }
+            else
+            {
                CD.sI.dirtPresent = false;
             }
             /*get wall sensors*/
@@ -262,11 +278,14 @@ public class VirtualHouse {
             /*check if it is charging station*/
             A = line.indexOf("cs") + 4;
             B = line.indexOf("'", A);
-            if ("1".equals(line.substring(A, B))) {
+            if ("1".equals(line.substring(A, B)))
+            {
                CD.sI.atChargingStation = true;
                currentCell = CD;
                CD.isCurrentCell = true;
-            } else {
+            }
+            else
+            {
                CD.sI.atChargingStation = false;
             }
 
@@ -274,9 +293,12 @@ public class VirtualHouse {
             floorPlan.add(CD);
          }
       }
-      try {
+      try
+      {
          br.close();
-      } catch (Exception e) {
+      }
+      catch (Exception e)
+      {
          logger.log(Level.WARNING, "Cannot close file", e);
       }
    }
@@ -286,8 +308,10 @@ public class VirtualHouse {
     * <p>
     * Removes jPanel window graphic and should be called before program exits
     */
-   public void Remove() {
-      if (useGraphics) {
+   public void Remove()
+   {
+      if (useGraphics)
+      {
          picture.Remove();
       }
    }
@@ -295,8 +319,10 @@ public class VirtualHouse {
    /**
     * Remove 1 unit of dirt from floor at current location                        
     */
-   public void Vacuum() {
-      if (currentCell.dirt > 0) {
+   public void Vacuum()
+   {
+      if (currentCell.dirt > 0)
+      {
          currentCell.dirt--;
       }
    }
@@ -316,34 +342,41 @@ public class VirtualHouse {
     * @return true if movement is legal, false if new coordinates would move the
     *      robot though walls or coordinates are not adjacent to old coordinates
     */
-   public boolean Move(int newX, int newY) {
+   public boolean Move(int newX, int newY)
+   {
+      /*update graphics if wanted*/
+      if (useGraphics)
+      {
+         picture.UpdateGraphics();
+      }
+      
       boolean movementOK = false;
-      for (direction d : direction.values()) {
+      for (direction d : direction.values())
+      {
          if ((currentCell.locX + d.xOffset()) == newX
-                 && (currentCell.locY + d.yOffset()) == newY) {
-            if (currentCell.sI.features[d.index()] == feature.OPEN) {
+                 && (currentCell.locY + d.yOffset()) == newY)
+         {
+            if (currentCell.sI.features[d.index()] == feature.OPEN)
+            {
                movementOK = true;
             }
          }
       }
-      if (movementOK) {
+      if (movementOK)
+      {
          currentCell.isCurrentCell = false;
 
          /*Get new cell information*/
-         for (int i = 0; i < floorPlan.size(); i++) {
+         for (int i = 0; i < floorPlan.size(); i++)
+         {
             if (floorPlan.get(i).locX == newX
-                    && floorPlan.get(i).locY == newY) {
+                    && floorPlan.get(i).locY == newY)
+            {
                currentCell = floorPlan.get(i);
                break;
             }
          }
          currentCell.isCurrentCell = true;
-
-         /*update graphics if wanted*/
-         if (useGraphics) {
-            /*update graphics*/
-            picture.UpdateGraphics();
-         }
       }
       return movementOK;
    }
@@ -357,15 +390,22 @@ public class VirtualHouse {
     *
     * @param  SensorInterface si - reference to sensor interface for passing xy
     */
-   public void GetInitialLocation(SensorInterface si) {
-      if (si != null) {
-         if (hasSentInitialLocation) {
+   public void GetInitialLocation(SensorInterface si)
+   {
+      if (si != null)
+      {
+         if (hasSentInitialLocation)
+         {
             si.StartingXCoord = Integer.MAX_VALUE;
             si.StartingYCoord = Integer.MAX_VALUE;
-         } else {
+         }
+         else
+         {
             hasSentInitialLocation = true;
-            for (int i = 0; i < floorPlan.size(); i++) {
-               if (floorPlan.get(i).sI.atChargingStation) {
+            for (int i = 0; i < floorPlan.size(); i++)
+            {
+               if (floorPlan.get(i).sI.atChargingStation)
+               {
                   si.StartingXCoord = floorPlan.get(i).locX;
                   si.StartingYCoord = floorPlan.get(i).locY;
                   break;
@@ -384,16 +424,22 @@ public class VirtualHouse {
     *
     * @param  SensorInterface si - reference to sensor interface for passing data
     */
-   public void SensorInformation(SensorInterface tempSI) {
-      if (tempSI != null) {
-         for (direction d : direction.values()) {
+   public void SensorInformation(SensorInterface tempSI)
+   {
+      if (tempSI != null)
+      {
+         for (direction d : direction.values())
+         {
             tempSI.features[d.index()] = currentCell.sI.features[d.index()];
          }
          tempSI.floor = currentCell.sI.floor;
          tempSI.atChargingStation = currentCell.sI.atChargingStation;
-         if (currentCell.dirt > 0) {
+         if (currentCell.dirt > 0)
+         {
             tempSI.dirtPresent = true;
-         } else {
+         }
+         else
+         {
             tempSI.dirtPresent = false;
          }
       }

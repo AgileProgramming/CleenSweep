@@ -194,31 +194,5 @@ public class CleanSweepRobotTest {
       } catch (Exception t) {
          fail("ActivityLog.txt was not created");
       }     
-      /*now load a different instance of the robot into the same instance of the
-       * virtual house to verify that it has been cleaned*/
-
-      System.out.println("--verify the house has been cleaned");
-      
-      
-      csr = new CleanSweepRobot(vh, 0, 1);
-      assertEquals(csr.cleanSweepUpdate(), true);
-      vh.SensorInformation(si);
-      assertEquals(si.atChargingStation, true);
-      assertEquals(si.dirtPresent, false);
-      assertEquals(si.floor, floorType.BareFloor);
-      assertEquals(si.features[n.index()], feature.OPEN);
-      assertEquals(si.features[e.index()], feature.OPEN);
-      assertEquals(si.features[s.index()], feature.STAIRS);
-      assertEquals(si.features[w.index()], feature.OBSTICLE);
-      assertEquals(csr.cleanSweepUpdate(), true);
-      vh.SensorInformation(si);
-      assertEquals(si.dirtPresent, false);
-      assertEquals(csr.cleanSweepUpdate(), true);
-      vh.SensorInformation(si);
-      assertEquals(si.dirtPresent, false);
-      assertEquals(csr.cleanSweepUpdate(), false);
-      vh.SensorInformation(si);
-      assertEquals(si.dirtPresent, false);
-
    }
 }
