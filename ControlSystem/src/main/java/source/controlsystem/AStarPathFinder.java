@@ -1,26 +1,22 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package source.controlsystem;
 
+import java.util.LinkedList;
 import source.controlsystem.CleanSweepRobot.CellDescription;
+import source.controlsystem.CleanSweepRobot.CellToVisit;
 import source.sensorsimulator.SensorInterface.direction;
 import source.sensorsimulator.SensorInterface.feature;
-import java.util.LinkedList;
-import source.controlsystem.CleanSweepRobot.CellToVisit;
 
 /**
  * SE-359/459 Clean Sweep Robotic Vacuum Cleaner Team Project
  *
- * This class implements the A* method of graph traversal. Peter Hart, Nils Nilsson and 
+ * This class implements the A* method of graph traversal. Peter Hart, Nils Nilsson and
  * Bertram Raphael of Stanford Research Institute (now SRI International) first described
- * the algorithm in 1968. It is an extension of Edsger Dijkstra's 1959 algorithm. Our team 
- * takes no credit for the algorithm, just the implementation. Further credit goes to an 
- * article by Patrick Lester called 'A* Pathfinding for Beginners' that put the whole 
+ * the algorithm in 1968. It is an extension of Edsger Dijkstra's 1959 algorithm. Our team
+ * takes no credit for the algorithm, just the implementation. Further credit goes to an
+ * article by Patrick Lester called 'A* Pathfinding for Beginners' that put the whole
  * thing in idiots language for easy coding.
  *
- * The class calculates the shortest path between a starting coordinate an ending 
+ * The class calculates the shortest path between a starting coordinate an ending
  * coordinate and provides a list containing the route
  *
  * @author Ilker Evernos, David LeGare, Jeffrey Sharp, Doug Oda
@@ -29,6 +25,9 @@ import source.controlsystem.CleanSweepRobot.CellToVisit;
  */
 public class AStarPathFinder {
 
+   /*
+    * Everything needed for graphics as well as for the A* algorithm
+    */
    static class Cell {
 
       CellDescription cd;
@@ -56,6 +55,8 @@ public class AStarPathFinder {
          cd.sI.features[3] = c.sI.features[3];
       }
    }
+
+   /*private variables*/
    private int sX;
    private int sY;
    private int eX;
@@ -66,9 +67,22 @@ public class AStarPathFinder {
    private AStarGraphics graphic;
    private boolean graphics;
 
-   public int calculateCharge(int startingX, int startingY,int endingX, 
+
+   /**
+   * Provides amount of battery charge to follow a know shortes path from A to B
+   * <p>
+   * Calculates shortest path and and then calculates charges to follow that path
+   *
+   * @param int startingX - The "From" x
+   * @param int startingY - The "From" y
+   * @param int endingX - The "To" x
+   * @param int endingY - The "To" y
+   * @param LinkedList<CellDescription> map - know floor plan ( previously traversed)
+   * @return Charge that would be used to follow the shortest path
+   */
+   public int calculateCharge(int startingX, int startingY,int endingX,
            int endingY, final LinkedList<CellDescription> map) {
-      
+
       /*initialize some variables*/
       int chargeRequiredForReturnTrip;
       graphics = false;
@@ -83,7 +97,8 @@ public class AStarPathFinder {
 
       generateOpenAndClosedLists();
 
-      /*get battery charge*/
+       /*calcualte battery charge by tracing the return path following the
+        * parent cell back to starting coordinate*/
       returnCells.addLast(closedList.getLast().cd);
       BatteryAndDirtBin badb = new BatteryAndDirtBin(closedList.getLast().cd.sI.floor);
       Cell tempC = closedList.getLast();
@@ -109,14 +124,25 @@ public class AStarPathFinder {
       return chargeRequiredForReturnTrip;
    }
 
-   /**
-    * 
-    * <p>
-    * 
-    */
+/**
+ * Provides shortest path list
+ * <p>
+ * Calculates shortest path and returns a list of floorplan cells that should
+ * be followed to get From A To B
+ *
+ * @param int startingX - The "From" x
+ * @param int startingY - The "From" y
+ * @param int endingX - The "To" x
+ * @param int endingY - The "To" y
+ * @param LinkedList<CellDescription> map - know floor plan ( previously traversed)
+ * @param boolean g - if true then pretty graphics will ensue
+ * @return LinkedList<CellToVisit> which is a list of XY pairs that can
+ *              be followed to trace path from starting XY to ending XY
+ */
    public LinkedList<CellToVisit> shortestPath(int startingX, int startingY,
            int endingX, int endingY,
-           final LinkedList<CellDescription> map, boolean g) {
+           final  LinkedList<CellDescription> map, boolean g) {
+      /*setup some private variables*/
       graphics = g;
       LinkedList<CellDescription> returnCells = new LinkedList<>();
       LinkedList<CellToVisit> returnValue = new LinkedList<>();
@@ -127,13 +153,16 @@ public class AStarPathFinder {
       localMap = map;
       openList = new LinkedList<>();
       closedList = new LinkedList<>();
+
+      /*setup graphics if desired*/
       if (graphics) {
          graphic = new AStarGraphics(localMap, openList, closedList, returnCells);
       }
 
+      /*find path from starting coordinates to ending coordinates*/
       generateOpenAndClosedLists();
 
-      /*populate return path*/
+      /*populate return path by tracing paretn cell back to starting coordinate*/
       returnCells.addLast(closedList.getLast().cd);
       returnValue.addLast(new CellToVisit(closedList.getLast().cd.locX, closedList.getLast().cd.locY));
       Cell tempC = closedList.getLast();
@@ -163,6 +192,16 @@ public class AStarPathFinder {
       return returnValue;
    }
 
+
+   /**
+    * Finds path to destination
+    * <p>
+    * This method is the one that actually searches the floor plan to chart a
+    * path from the starting coordinate to the destination coordinate. It does
+    * this by continually adding adjacent cells to the open list of the cell
+    * that has the lowest f score. It then moves that cell from the open
+    * list to the closed list.
+    */
    private void generateOpenAndClosedLists() {
 
       /*load intial starting cell into the open list*/
@@ -198,6 +237,16 @@ public class AStarPathFinder {
       }
    }
 
+   /**
+    * Add cells adjacent to the parameter to the open list
+    * <p>
+    * This method evaluates each of 4 directions and determines if it is open,
+    * if the next cell in that direction is on the closed list. If it is open
+    * and not on the closed list then add it to the open list. If it is duplicated
+    * in the open list then the duplicate with the higher g score is discarded.
+    *
+    * @param Cell c - The new parent to all the cells created (4 possible)
+    */
    private void addAdjacentCells(final Cell c) {
 
       boolean okToUse;
@@ -220,7 +269,7 @@ public class AStarPathFinder {
             inOpenList = false;
             for (int i = 0; i < openList.size(); i++) {
                if (openList.get(i).cd.locX == (c.cd.locX + d.xOffset()) && openList.get(i).cd.locY == (c.cd.locY + d.yOffset())) {
-                  /*ok one has been found so save the new one if the score is higher and discard the old one*/
+                  /*ok one has been found so save the new one if the score is lower and discard the old one*/
                   if (generateNewCell(openList.get(i).cd, c).gScore < openList.get(i).gScore) {
                      openList.remove(i);
                      openList.add(generateNewCell(openList.get(i).cd, c));
@@ -243,6 +292,17 @@ public class AStarPathFinder {
       }
    }
 
+   /**
+    * Generate and populate new cell
+    * <p>
+    * This method creates a new call complete with all information in the internal
+    * map of the clean sweep robot. It also calculates and populates the G and
+    * H scores required for the A* algorithm
+    *
+    * @param CellDescription newC - Cell information such as features, floortype etc.
+    * @param Cell parentC - The cell adjacent to this one that called for its creation
+    * @return Fresh new Cell
+    */
    private Cell generateNewCell(CellDescription newC, Cell parentC) {
       /*distance to starting cell*/
       int g = parentC.gScore + 10;
@@ -250,6 +310,7 @@ public class AStarPathFinder {
       int deltaX = Integer.signum(newC.locX - eX) * (newC.locX - eX);
       int deltaY = Integer.signum(newC.locY - eY) * (newC.locY - eY);
       int h = (deltaX + deltaY) * 10;
+      /*generate and return new cell*/
       return new Cell(newC, parentC.cd.locX, parentC.cd.locY, g, h);
    }
 }

@@ -140,7 +140,7 @@ public class CleanSweepRobotTest {
       assertEquals(si.features[e.index()], feature.OPEN);
       assertEquals(si.features[s.index()], feature.OPEN);
       assertEquals(si.features[w.index()], feature.OBSTICLE);
-      System.out.println("--attempt move 4");
+ /*     System.out.println("--attempt move 4");
       assertEquals(csr.cleanSweepUpdate(), false);
       vh.SensorInformation(si);
       assertEquals(si.atChargingStation, false);
@@ -149,10 +149,10 @@ public class CleanSweepRobotTest {
       assertEquals(si.features[n.index()], feature.OBSTICLE);
       assertEquals(si.features[e.index()], feature.OPEN);
       assertEquals(si.features[s.index()], feature.OPEN);
-      assertEquals(si.features[w.index()], feature.OBSTICLE);
+      assertEquals(si.features[w.index()], feature.OBSTICLE);^/
       /*two files were created, check them*/
 
-      System.out.println("--verify FloorPlanDump.xml was correctly created");
+  /*    System.out.println("--verify FloorPlanDump.xml was correctly created");
       String line = null;
       BufferedReader br = null;
       File f = new File("FloorPlanDump.xml");
@@ -193,6 +193,6 @@ public class CleanSweepRobotTest {
          br.close();
       } catch (Exception t) {
          fail("ActivityLog.txt was not created");
-      }     
+      }     */
    }
 }

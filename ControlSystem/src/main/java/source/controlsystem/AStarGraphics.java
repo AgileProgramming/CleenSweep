@@ -14,9 +14,9 @@ import source.sensorsimulator.SensorInterface;
 
 /**
  *
- * This class has absolutely nothing to do with the requirements of the 
+ * This class has absolutely nothing to do with the requirements of the
  * Clean Sweep Project. It aids in troubleshooting the A* search class
- * 
+ *
  * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
  * @version     I3
  * @date        03Nov2014
@@ -32,7 +32,7 @@ public class AStarGraphics{
    private LinkedList<Cell> openList;
    private LinkedList<Cell> closedList;
    private LinkedList<CellDescription> returnPath;
-   
+
    /*
     * Graphic instatiation, I'm not going into detail since this
     * is not actually part of the project requriements
@@ -48,19 +48,19 @@ public class AStarGraphics{
       floorYdimension = 1;
       for ( int i = 0; i < cd.size(); i ++ ) {
          if ( cd.get(i).locX > floorXdimension ){
-            floorXdimension = cd.get(i).locX; 
+            floorXdimension = cd.get(i).locX;
          }
          if ( cd.get(i).locY > floorYdimension ){
-            floorYdimension = cd.get(i).locY; 
+            floorYdimension = cd.get(i).locY;
          }
       }
       cSJP = new FloorJPanel();
-      floorBI = new BufferedImage((floorXdimension * 50), 
+      floorBI = new BufferedImage((floorXdimension * 50),
                       (floorYdimension * 50), BufferedImage.TYPE_BYTE_BINARY);
       cSJP.paintComponent(floorBI.createGraphics());
       floorFrame = new JFrame("A* tracking");
       floorFrame.isAlwaysOnTop();
-      floorFrame.setMinimumSize(new Dimension(floorXdimension * 62 + 100, 
+      floorFrame.setMinimumSize(new Dimension(floorXdimension * 62 + 100,
                                                    floorYdimension * 62 + 100));
       floorFrame.add(cSJP);
       floorFrame.pack();
@@ -74,8 +74,8 @@ public class AStarGraphics{
    /*
     * Jpanel extenstion, I'm not going into detail since this
     * is not actually part of the project requriements
-    * 
-    * Note Many Many Magic Numbers, again this is not part of the project 
+    *
+    * Note Many Many Magic Numbers, again this is not part of the project
     * requirements so I'll leave 'em alone
     */
    private class FloorJPanel extends JPanel {
@@ -119,23 +119,23 @@ public class AStarGraphics{
             g2d.fillRect (( openList.get(i).cd.locX* 50 + 10 ),
             ((floorYdimension * 50 + 10) - (openList.get(i).cd.locY * 50)),40,40);
          }
-         
+
          g2d.setColor(Color.YELLOW);
          for ( int i = 0; i < closedList.size(); i ++ ){
             g2d.fillRect (( closedList.get(i).cd.locX* 50 + 10 ),
             ((floorYdimension * 50 + 10) - (closedList.get(i).cd.locY * 50)),40,40);
          }
-         
+
          g2d.setColor(Color.GREEN);
          for ( int i = 0; i < returnPath.size(); i ++ ){
             g2d.fillRect (( returnPath.get(i).locX * 50 + 10 ),
             ((floorYdimension * 50 + 10) - (returnPath.get(i).locY * 50)),40,40);
-         }  
+         }
       }
    }
 
    /*
-    * Updates jpanel graphics after witing 250 milliseconds
+    * Updates jpanel graphics after witing 100 milliseconds
     */
    public void UpdateGraphics() {
       try {
@@ -147,7 +147,7 @@ public class AStarGraphics{
    }
 
    /*
-    * Removes jpanel after waiting 2 seconds
+    * Removes jpanel
     */
    public void Remove() {
       floorFrame.dispose();
