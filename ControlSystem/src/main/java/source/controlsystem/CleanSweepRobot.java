@@ -1,11 +1,13 @@
 package source.controlsystem;
 
+import java.awt.Component;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import source.sensorsimulator.SensorInterface;
 import source.sensorsimulator.SensorInterface.direction;
 import source.sensorsimulator.SensorInterface.feature;
@@ -23,6 +25,7 @@ import source.sensorsimulator.VirtualHouse;
  * @date 03Nov2014
  */
 public class CleanSweepRobot {
+   private Component frame;
 
    static class CellToVisit {
 
@@ -225,7 +228,13 @@ public class CleanSweepRobot {
                         hasMadeReturnTripToChargingStations = true;
          }
          if (hasMadeReturnTripToChargingStations && !finalJourney && atChargingStation) {
-            guages.emptyDirtBin();
+            if ( guages.dirtBinCapacity() == 0){
+               JOptionPane.showMessageDialog(frame,
+                "EMPTY ME",
+                "Clean Sweep Alert",
+                JOptionPane.WARNING_MESSAGE);
+                guages.emptyDirtBin();
+            }
             guages.chargeBattery();
             rechargeTrip = pf.shortestPath(currentX, currentY, beforeChargingTripX, beforeChargingTripY, internalMap, false);
             hasMadeReturnTripToChargingStations = false;
