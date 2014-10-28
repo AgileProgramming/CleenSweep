@@ -49,18 +49,12 @@ public class CleanSweepRobot {
       }
    }
 
-   private enum Tasks {
-
-      SWEEP,
-      CHECK_SENSORS,
-      MOVE;
-   }
    /*Private Variables*/
    private VirtualHouse vH;
    private LinkedList<CellDescription> internalMap;
    private LinkedList<CellToVisit> destinations;
    private LinkedList<CellToVisit> rechargeTrip;
-   private LinkedList<Tasks> tasksCompleted;
+   private LinkedList<String> tasksCompleted;
    private BatteryAndDirtBin guages;
    private int currentX;
    private int currentY;
@@ -151,8 +145,8 @@ public class CleanSweepRobot {
       CellDescription Current = new CellDescription();
 
       /*Check Sensors*/
-      tasksCompleted.addLast(Tasks.CHECK_SENSORS);
       vH.SensorInformation(Current.sI);
+      AddCompletedTask ( Current );
       Current.locX = currentX;
       Current.locY = currentY;
 
@@ -160,19 +154,19 @@ public class CleanSweepRobot {
       addToInternalMap(Current);
 
       /*We ahve moved, check battery*/
-      tripToChargingStationIfNecessary();
+      tripToChargingStationIfNecessary(Current);
 
       /*Update destinations*/
       updateNotVisitedList(Current);
 
       /*Sweep if necessary*/
-      while (Current.sI.dirtPresent) {
+      while (Current.sI.dirtPresent && rechargeTrip.size() == 0 ) {
          vH.Vacuum();
-         tasksCompleted.addLast(Tasks.SWEEP);
          guages.swept();
-         tripToChargingStationIfNecessary();
-         tasksCompleted.addLast(Tasks.CHECK_SENSORS);
+         AddCompletedTask();
+         tripToChargingStationIfNecessary(Current);
          vH.SensorInformation(Current.sI);
+         AddCompletedTask ( Current );
       }
 
       /*are we done yet?*/
@@ -181,7 +175,7 @@ public class CleanSweepRobot {
             beforeChargingTripX = chargingStationX;
             beforeChargingTripY = chargingStationY;
             finalJourney = true;
-            tripToChargingStationIfNecessary();
+            tripToChargingStationIfNecessary(Current);
          } else {
             /*All done so save internal map to file*/
             writeInternalMap();
@@ -207,8 +201,8 @@ public class CleanSweepRobot {
     * capacity and battery life. It will calculate the battery required to
     * return to the charging station to insure it always reaches the stations
     */
-   private void tripToChargingStationIfNecessary() {
-
+   private void tripToChargingStationIfNecessary(CellDescription Current) {
+      int FudgeFactor = Current.sI.floor.charge() * 2; 
       boolean atChargingStation = false;
       if (currentX == chargingStationX && currentY == chargingStationY) {
          atChargingStation = true;
@@ -218,14 +212,15 @@ public class CleanSweepRobot {
          AStarPathFinder pf = new AStarPathFinder();
 
          int battRequiredToGetBack =
-                 pf.calculateCharge(currentX, currentY, chargingStationX, chargingStationY, internalMap);
+                 pf.calculateCharge(currentX, currentY, chargingStationX, chargingStationY, internalMap) ;
          if (((guages.dirtBinCapacity() == 0)
-                 || ((battRequiredToGetBack + 3) > guages.charge()) || finalJourney) && !atChargingStation) {
+                 || ( guages.charge() <= ( battRequiredToGetBack + FudgeFactor ) )
+                 || finalJourney) && !atChargingStation) {
 
             rechargeTrip = pf.shortestPath(currentX, currentY, chargingStationX, chargingStationY, internalMap, true);
             beforeChargingTripX = currentX;
             beforeChargingTripY = currentY;
-                        hasMadeReturnTripToChargingStations = true;
+            hasMadeReturnTripToChargingStations = true;
          }
          if (hasMadeReturnTripToChargingStations && !finalJourney && atChargingStation) {
             if ( guages.dirtBinCapacity() == 0){
@@ -317,10 +312,10 @@ public class CleanSweepRobot {
                currentX = Current.locX + d.xOffset();
                currentY = Current.locY + d.yOffset();
                moved = true;
-               tasksCompleted.addLast(Tasks.MOVE);
                SensorInterface ci = new SensorInterface();
                vH.SensorInformation(ci);
                guages.moved(ci.floor);
+               AddCompletedTask ( d );
                break;
             }
          }
@@ -439,20 +434,51 @@ public class CleanSweepRobot {
     */
    private void writeTaskList() {
       BufferedWriter bw = null;
-      File f = new File("ActivityLog.txt");
+      File f = new File("ActivityLog.csv");
       try {
          bw = new BufferedWriter(new FileWriter(f));
       } catch (Exception e) {
          logger.log(Level.WARNING, "File not created", e);
       }
       try {
-
+         bw.write("Action, Floor Type, Dirt Present, North, East, South, West, Movement Direction, Battery, Dirt Capacity \n");
          for (int i = 0; i < tasksCompleted.size(); i++) {
-            bw.write(tasksCompleted.get(i).name() + ",\n");
+            bw.write(tasksCompleted.get(i));
          }
          bw.close();
       } catch (Exception e) {
          logger.log(Level.WARNING, "Cannot Write to File", e);
       }
    }
+   
+   private void AddCompletedTask ( CellDescription current )
+   {
+      String dp;
+      if ( current.sI.dirtPresent ){
+         dp = "Yes";
+      } else {
+         dp = "No";
+      }
+         
+      tasksCompleted.addLast("Sensor Check, " + current.sI.floor + ", " + dp +
+                             "," + current.sI.features[direction.NORTH.index()] +
+                             "," + current.sI.features[direction.EAST.index()] +
+                             "," + current.sI.features[direction.SOUTH.index()] +
+                             "," + current.sI.features[direction.WEST.index()] +
+                             ", -, -, -\n");
+      
+   }
+ 
+   private void AddCompletedTask ( )
+   {
+     
+     tasksCompleted.addLast("Sweep, -, -, -, -, -, -, -, " + 
+             guages.charge() / 10 + "." +guages.charge()%10 + ", "+ guages.dirtBinCapacity()+ "\n"); 
+   }
+   
+   private void AddCompletedTask (direction dir )
+   {
+      tasksCompleted.addLast("Move, -, -, -, -, -, -, "+ dir.name()+ ", " +
+              guages.charge() / 10 + "." +guages.charge()%10 + ", -\n");
+   }  
 }
