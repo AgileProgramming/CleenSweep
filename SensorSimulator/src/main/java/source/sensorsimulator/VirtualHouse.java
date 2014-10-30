@@ -6,10 +6,10 @@ import source.sensorsimulator.SensorInterface.floorType;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * SE-359/459 Clean Sweep Robotic Vacuum Cleaner Team Project
@@ -69,27 +69,27 @@ public class VirtualHouse
 
       /*Get user input, xml file name and if the user wants the graphic*/
 
-      BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
       for (;;)
       {
-         System.out.println("Type Input File with floor plan (.\\floorplan.xml)");
-         try
-         {
-            inputFile = in.readLine();
-         }
-         catch (Exception e)
-         {
-            logger.log(Level.SEVERE, "Input file not found", e);
-         }
-         if (inputFile.isEmpty())
-         {
-            inputFile = "floorplan.xml";
-         }
-         File f = new File(inputFile);
-         if (f.canRead())
-         {
-            break;
-         }
+     
+       inputFile = JOptionPane.showInputDialog("Type Input File with floor plan (floorplan.xml)");
+       
+       if (inputFile == null)
+       {
+           System.exit(0);
+       }
+           
+       if (!inputFile.equalsIgnoreCase("floorplan.xml"))
+       {
+         JOptionPane.showMessageDialog(null, "Input file not found");
+       }   
+         
+       File f = new File(inputFile);
+       if (f.canRead())
+       {
+         break;
+       }
+      
       }
 
       /*Fead file and put information in to a list for future reference*/
@@ -101,6 +101,7 @@ public class VirtualHouse
          picture = new FloorGraphics(floorPlan);
          picture.UpdateGraphics();
       }
+      
    }
 
    /**
