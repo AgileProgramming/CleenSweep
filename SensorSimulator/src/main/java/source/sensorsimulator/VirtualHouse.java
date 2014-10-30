@@ -67,27 +67,24 @@ public class VirtualHouse
       hasSentInitialLocation = false;
       floorPlan = new LinkedList<>();
 
-      /*Get user input, xml file name and if the user wants the graphic*/
-
       for (;;)
       {
-     
-       inputFile = JOptionPane.showInputDialog("Type Input File with floor plan (floorplan.xml)");
-       
+       /*prompt user for inptu file*/
+       inputFile = JOptionPane.showInputDialog("Type Input File with floor plan (default: .\\floorplan.xml)",".\\floorplan.xml");
+       /*user hit cancel so get out*/
        if (inputFile == null)
        {
            System.exit(0);
        }
-           
-       if (!inputFile.equalsIgnoreCase("floorplan.xml"))
-       {
-         JOptionPane.showMessageDialog(null, "Input file not found");
-       }   
-         
+       /*verify that the file is valid*/
        File f = new File(inputFile);
        if (f.canRead())
        {
          break;
+       }
+       else
+       {
+          JOptionPane.showMessageDialog(null, "Input file not found");
        }
       
       }
