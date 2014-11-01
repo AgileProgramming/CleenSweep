@@ -21,7 +21,7 @@ import source.sensorsimulator.SensorInterface.feature;
  *
  * @author Ilker Evernos, David LeGare, Jeffrey Sharp, Doug Oda
  * @version I3
- * @date 02Nov2014
+ * @date 08Nov2014
  */
 public class AStarPathFinder {
 

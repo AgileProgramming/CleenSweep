@@ -19,7 +19,7 @@ import source.sensorsimulator.SensorInterface;
  *
  * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
  * @version     I3
- * @date        03Nov2014
+ * @date        08Nov2014
  */
 public class AStarGraphics{
 

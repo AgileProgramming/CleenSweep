@@ -50,6 +50,12 @@ public class CleanSweepRobot {
       }
    }
 
+   private enum Log{
+      CHECK_SENSOR,
+      MOVE,
+      SWEEP
+   }
+   
    private enum Movement {
 
       CLEANING,
@@ -155,7 +161,7 @@ public class CleanSweepRobot {
 
       /*Check Sensors*/
       vH.SensorInformation(Current.sI);
-      AddCompletedTask(Current);
+      AddCompletedTask(Current,Log.CHECK_SENSOR);
       Current.locX = currentX;
       Current.locY = currentY;
 
@@ -174,9 +180,9 @@ public class CleanSweepRobot {
                while (Current.sI.dirtPresent && !timeToReturntoChargingStation(Current)) {
                   vH.Vacuum();
                   guages.swept();
-                  AddCompletedTask();
+                  AddCompletedTask(Current,Log.SWEEP);
                   vH.SensorInformation(Current.sI);
-                  AddCompletedTask(Current);
+                  AddCompletedTask(Current,Log.CHECK_SENSOR);
                }
 
                /*Move*/
@@ -362,7 +368,7 @@ public class CleanSweepRobot {
                SensorInterface ci = new SensorInterface();
                vH.SensorInformation(ci);
                guages.moved(ci.floor);
-               AddCompletedTask(d);
+               AddCompletedTask(Current, Log.MOVE);
                break;
             }
          }
@@ -488,7 +494,7 @@ public class CleanSweepRobot {
          logger.log(Level.WARNING, "File not created", e);
       }
       try {
-         bw.write("Action, Charging Station, Floor Type, Dirt Present, North, East, South, West, Movement Direction, Battery, Dirt Capacity\n");
+         bw.write("Action, Loc y/x, Chrg Station, Floor Type, Dirt Present, North, East, South, West, Battery, Dirt Capacity\n");
          for (int i = 0; i < tasksCompleted.size(); i++) {
             bw.write(tasksCompleted.get(i));
          }
@@ -503,8 +509,9 @@ public class CleanSweepRobot {
     * Add all sensor information to the log
     * 
     * @param CellDescription current - contains all current sensor information
+    * @param Log action - what is being done
     */
-   private void AddCompletedTask(CellDescription current) {
+   private void AddCompletedTask(CellDescription current, Log action) {
       String dp;
       String cs;
       if (current.sI.dirtPresent) {
@@ -517,36 +524,17 @@ public class CleanSweepRobot {
       } else {
          cs = "No";
       }
-      tasksCompleted.addLast("Sensor Check, " + current.sI.floor
+      tasksCompleted.addLast( action 
+              + ", " + currentY+ "/" +currentX
               + ", " + cs
+              + ", " + current.sI.floor
               + ", " + dp
               + "," + current.sI.features[direction.NORTH.index()]
               + "," + current.sI.features[direction.EAST.index()]
               + "," + current.sI.features[direction.SOUTH.index()]
               + "," + current.sI.features[direction.WEST.index()]
-              + ", -, -, -\n");
+              + "," + guages.charge() / 10 + "." + guages.charge() % 10
+              + "," + guages.dirtBinCapacity() + "\n");
 
-   }
-
-   
-   /**
-    * Add the Sweeping action to the log along with updated battery charge and 
-    * dirt bint capacity
-    */
-   private void AddCompletedTask() {
-
-      tasksCompleted.addLast("Sweep, -, -, -, -, -, -, -, -, "
-              + guages.charge() / 10 + "." + guages.charge() % 10 + ", " + guages.dirtBinCapacity() + "\n");
-   }
-
-   
-   /**
-    * Add Movement and new battery charge to log
-    * 
-    * @param Direction dir - direction that the robot moved
-    */
-   private void AddCompletedTask(direction dir) {
-      tasksCompleted.addLast("Move, -, -, -, -, -, -, -, " + dir.name() + ", "
-              + guages.charge() / 10 + "." + guages.charge() % 10 + ", -\n");
    }
 }
