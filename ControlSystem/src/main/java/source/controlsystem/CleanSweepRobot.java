@@ -161,7 +161,7 @@ public class CleanSweepRobot {
 
       /*Check Sensors*/
       vH.SensorInformation(Current.sI);
-      AddCompletedTask(Current,Log.CHECK_SENSOR);
+      AddCompletedTask(Current.sI,Log.CHECK_SENSOR);
       Current.locX = currentX;
       Current.locY = currentY;
 
@@ -180,9 +180,9 @@ public class CleanSweepRobot {
                while (Current.sI.dirtPresent && !timeToReturntoChargingStation(Current)) {
                   vH.Vacuum();
                   guages.swept();
-                  AddCompletedTask(Current,Log.SWEEP);
+                  AddCompletedTask(Current.sI,Log.SWEEP);
                   vH.SensorInformation(Current.sI);
-                  AddCompletedTask(Current,Log.CHECK_SENSOR);
+                  AddCompletedTask(Current.sI,Log.CHECK_SENSOR);
                }
 
                /*Move*/
@@ -368,7 +368,7 @@ public class CleanSweepRobot {
                SensorInterface ci = new SensorInterface();
                vH.SensorInformation(ci);
                guages.moved(ci.floor);
-               AddCompletedTask(Current, Log.MOVE);
+               AddCompletedTask(ci, Log.MOVE);
                break;
             }
          }
@@ -508,18 +508,18 @@ public class CleanSweepRobot {
    /**
     * Add all sensor information to the log
     * 
-    * @param CellDescription current - contains all current sensor information
+    * @param SensorInterface current - contains all current sensor information
     * @param Log action - what is being done
     */
-   private void AddCompletedTask(CellDescription current, Log action) {
+   private void AddCompletedTask(SensorInterface current, Log action) {
       String dp;
       String cs;
-      if (current.sI.dirtPresent) {
+      if (current.dirtPresent) {
          dp = "Yes";
       } else {
          dp = "No";
       }
-      if (current.sI.atChargingStation) {
+      if (current.atChargingStation) {
          cs = "Yes";
       } else {
          cs = "No";
@@ -527,12 +527,12 @@ public class CleanSweepRobot {
       tasksCompleted.addLast( action 
               + ", " + currentY+ "/" +currentX
               + ", " + cs
-              + ", " + current.sI.floor
+              + ", " + current.floor
               + ", " + dp
-              + "," + current.sI.features[direction.NORTH.index()]
-              + "," + current.sI.features[direction.EAST.index()]
-              + "," + current.sI.features[direction.SOUTH.index()]
-              + "," + current.sI.features[direction.WEST.index()]
+              + "," + current.features[direction.NORTH.index()]
+              + "," + current.features[direction.EAST.index()]
+              + "," + current.features[direction.SOUTH.index()]
+              + "," + current.features[direction.WEST.index()]
               + "," + guages.charge() / 10 + "." + guages.charge() % 10
               + "," + guages.dirtBinCapacity() + "\n");
 
