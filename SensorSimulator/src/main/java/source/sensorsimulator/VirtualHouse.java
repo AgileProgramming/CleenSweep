@@ -71,10 +71,11 @@ public class VirtualHouse
       {
        /*prompt user for inptu file*/
        inputFile = JOptionPane.showInputDialog("Type Input File with floor plan (default: .\\floorplan.xml)",".\\floorplan.xml");
+       
        /*user hit cancel so get out*/
        if (inputFile == null)
        {
-           System.exit(0);
+           return;
        }
        /*verify that the file is valid*/
        File f = new File(inputFile);
