@@ -1,18 +1,17 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>Source</groupId>
+        <artifactId>CleanSweep_EvrenosLeGareSharpOda</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <groupId>Source</groupId>
-    <artifactId>CleanSweepProject</artifactId>
+    <artifactId>ControlSystem</artifactId>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-  </parent>
-  <groupId>Source</groupId>
-  <artifactId>ControlSystem</artifactId>
-  <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>ControlSystem</name>
-  <url>http://maven.apache.org</url>
+    <name>ControlSystem</name>
+    <url>http://maven.apache.org</url>
     <build>
         <plugins>
             <plugin>
@@ -27,21 +26,14 @@
         </plugins>
     </build>
     <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <dependencies>
-      <dependency>
-      <groupId>Source</groupId>
-      <artifactId>SensorSimulator</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <type>jar</type>
-      </dependency>
-      <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-      <type>jar</type>
-    </dependency>
-  </dependencies>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>Source</groupId>
+            <artifactId>SensorSimulator</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>
