@@ -1,4 +1,4 @@
-package source.sensorsimulator;
+package source.controlsystem;
 
 import source.sensorsimulator.SensorInterface.floorType;
 
@@ -6,29 +6,29 @@ import source.sensorsimulator.SensorInterface.floorType;
  * SE-359/459 Clean Sweep Robotic Vacuum Cleaner Team Project
  * 
  * The purpose if this class is to track and store battery charge information
- * and dust bin capacity.
+ * and dirt bin capacity.
  * 
  * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
  * @version     I2
  * @date        25Sep2014
  */
-public class InternalSensors {
+public class BatteryAndDirtBin {
 
-   private int dustBinCapacity;
+   private int dirtBinCapacity;
    private int batteryCharge;
    private floorType currentFloorType;
 
    /**
-    * Constructor for InternalSensors
+    * Constructor for BatteryAndDirtBin
     * <p>
-    * Constructor sets the dust bin capacity and the battery life to 50 per
+    * Constructor sets the dirt bin capacity and the battery life to 50 per
     * the project requirements. I also saves the parameter as the current floor
     * type. Note that the battery is 10x
     * 
     * @param SensorInterface.floorType initialFloorType
     */
-   public InternalSensors(floorType initialFloorType) {
-      dustBinCapacity = 50;
+   public BatteryAndDirtBin(floorType initialFloorType) {
+      dirtBinCapacity = 50;
       batteryCharge = 500;
       currentFloorType = initialFloorType;
    }
@@ -55,7 +55,7 @@ public class InternalSensors {
    }
 
    /**
-    * Update battery charge and dust bin capacity based on the last floor
+    * Update battery charge and dirt bin capacity based on the last floor
     * type sent to this object
     */
    public void swept() {
@@ -64,13 +64,13 @@ public class InternalSensors {
       } else {
          batteryCharge = 0;
       }
-      if (dustBinCapacity > 0) {
-         dustBinCapacity--;
+      if (dirtBinCapacity > 0) {
+         dirtBinCapacity--;
       }
    }
 
    /**
-    * Update battery charge and dust bin capacity base on parameter
+    * Update battery charge and dirt bin capacity base on parameter
     * 
     * @param SensorInterface.floorType floorType - type of floor being swept
     */
@@ -81,16 +81,16 @@ public class InternalSensors {
          batteryCharge = 0;
       }
 
-      if (dustBinCapacity > 0) {
-         dustBinCapacity--;
+      if (dirtBinCapacity > 0) {
+         dirtBinCapacity--;
       }
    }
 
    /**
-    * Set dust bin capacity to 50  
+    * Set dirt bin capacity to 50  
     */
-   public void emptyDustBin() {
-      dustBinCapacity = 50;
+   public void emptyDirtBin() {
+      dirtBinCapacity = 50;
    }
 
    /**
@@ -101,12 +101,12 @@ public class InternalSensors {
    }
 
    /**
-    * Returns remaining space in dust bin                        
+    * Returns remaining space in dirt bin                        
     *
     * @return integer - remaining capacity
     */
-   public int dustBinCapacity() {
-      return dustBinCapacity;
+   public int dirtBinCapacity() {
+      return dirtBinCapacity;
    }
 
    /**

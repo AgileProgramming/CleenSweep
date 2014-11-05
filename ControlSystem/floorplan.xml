@@ -1,7 +1,7 @@
 1 <home >
 2 <floor level ='1'>
 3 <! -- Guest Bedroom A -->
-4 <cell xs='0' ys='0' ss='2' ps='1212 ' ds='1' cs='1' />
+4 <cell xs='0' ys='0' ss='2' ps='1212 ' ds='1' cs='0' />
 5 <cell xs='1' ys='0' ss='2' ps='1112 ' ds='1' cs='0' />
 6 <cell xs='2' ys='0' ss='2' ps='1112 ' ds='1' cs='0' />
 7 <cell xs='3' ys='0' ss='2' ps='2112 ' ds='1' cs='0' />
@@ -34,7 +34,7 @@
 34 <cell xs='4' ys='2' ss='1' ps='1211 ' ds='2' cs='0' />
 35 <cell xs='5' ys='2' ss='1' ps='2111 ' ds='1' cs='0' />
 36 <cell xs='4' ys='3' ss='1' ps='1111 ' ds='2' cs='0' />
-37 <cell xs='5' ys='3' ss='1' ps='2111 ' ds='1' cs='0' />
+37 <cell xs='5' ys='3' ss='1' ps='2111 ' ds='1' cs='1' />
 38 <cell xs='4' ys='4' ss='1' ps='1211 ' ds='2' cs='0' />
 39 <cell xs='5' ys='4' ss='1' ps='2111 ' ds='1' cs='0' />
 40 <cell xs='4' ys='5' ss='1' ps='1211 ' ds='2' cs='0' />

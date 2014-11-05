@@ -8,8 +8,8 @@ import source.sensorsimulator.VirtualHouse;
  * Entry point for the Clean Sweep Robotic Vacuum Cleaner Team Project
  * 
  * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
- * @version     I1
- * @date        11Sep2014
+ * @version     I3
+ * @date        08Nov2014
  */
 public class CleanSweep {
 
