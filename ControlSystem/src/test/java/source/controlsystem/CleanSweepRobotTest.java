@@ -103,7 +103,7 @@ public class CleanSweepRobotTest {
    public void testCleanSweepUpdate() {
       System.out.println("Test cleanSweepUpdate()");
       VirtualHouse vh = new VirtualHouse(true);
-      CleanSweepRobot csr = new CleanSweepRobot(vh);
+      CleanSweepRobot robot = new CleanSweepRobot(vh);
       SensorInterface si = new SensorInterface();
       direction n = direction.NORTH;
       direction e = direction.EAST;
@@ -116,6 +116,7 @@ public class CleanSweepRobotTest {
       assertEquals(si.StartingYCoord, Integer.MAX_VALUE);
       /*first move return true*/
 
+      CleanSweepRobot csr = new CleanSweepRobot(vh,0,0);
       System.out.println("--verify move 1");
       assertEquals(csr.cleanSweepUpdate(), true);
       /*have no access to robot variables but we can check Virtual house 

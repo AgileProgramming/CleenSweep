@@ -78,6 +78,8 @@ public class CleanSweepRobot {
    private int beforeChargingTripY;
    private boolean stuck;
    private Movement movement;
+   private boolean displayGraphics;
+   
    /*Exception log for IO*/
    private static final Logger logger = Logger.getLogger("Exceptions");
 
@@ -114,6 +116,7 @@ public class CleanSweepRobot {
       /*intialize other variables*/
       movement = Movement.CLEANING;
       stuck = false;
+      displayGraphics = true;
    }
 
    /**
@@ -145,6 +148,7 @@ public class CleanSweepRobot {
       /*intialize other variables*/
       movement = Movement.CLEANING;
       stuck = false;
+      displayGraphics = false;
    }
 
    /**
@@ -222,7 +226,6 @@ public class CleanSweepRobot {
                   moved = true;
                }
                break;
-            default:
             case FINAL_TRIP_TO_CHARGING_STATION:
                if (currentX == chargingStationX && currentY == chargingStationY) {
                   /*All done so save internal map to file*/
@@ -234,6 +237,11 @@ public class CleanSweepRobot {
                    moveToRechargeStation(Current);
                    moved = true;
                }
+               break;
+            /*cannot get here but allow exit of while loop if the imposisble happens*/
+            default:
+               moved = true;
+               break;
          }
       }
       return true;
@@ -295,7 +303,7 @@ public class CleanSweepRobot {
          beforeChargingTripX = currentX;
          beforeChargingTripY = currentY;
          AStarPathFinder pf = new AStarPathFinder();
-         ShortestPath = pf.shortestPath(currentX, currentY, chargingStationX, chargingStationY, internalMap, true);
+         ShortestPath = pf.shortestPath(currentX, currentY, chargingStationX, chargingStationY, internalMap, displayGraphics);
          ShortestPath.removeLast(); 
       }
       /* move if desired and possible */

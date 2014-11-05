@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -25,7 +27,8 @@ public class FloorGraphics {
    private int floorYdimension;
    private int floorXdimension;
    private List<VirtualHouse.CellDescription> Floor;
-
+   private static final Logger logger = Logger.getLogger("Exceptions");
+   
    /*
     * Graphic instatiation, I'm not going into detail since this
     * is not actually part of the project requriements
@@ -54,6 +57,7 @@ public class FloorGraphics {
       try {
          Thread.sleep(1000);
       } catch (Exception e) {
+         logger.log(Level.WARNING, "Just to shutup Sonar", e);
       }
    }
 
@@ -112,6 +116,7 @@ public class FloorGraphics {
       try {
          Thread.sleep(250);
       } catch (Exception e) {
+         logger.log(Level.WARNING, "Just to shutup SonarA", e);
       }
       cSJP.paintComponent(floorBI.createGraphics());
       floorFrame.repaint();
@@ -124,6 +129,7 @@ public class FloorGraphics {
       try {
          Thread.sleep(2000);
       } catch (Exception e) {
+         logger.log(Level.WARNING, "Just to shutup SonarB", e);
       }
       floorFrame.dispose();
    }

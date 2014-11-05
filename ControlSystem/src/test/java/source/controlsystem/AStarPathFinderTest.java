@@ -76,13 +76,13 @@ public class AStarPathFinderTest {
       AStarPathFinder instance = new AStarPathFinder();
       LinkedList expResult = null;
       System.out.println("-Lower left to upper right");
-      LinkedList result = instance.shortestPath(0, 0, 3, 4, map, true);
+      LinkedList result = instance.shortestPath(0, 0, 3, 4, map, false);
       assertEquals(8, result.size());
       System.out.println("-Lower left to around corner");
-      result = instance.shortestPath(0, 0, 2, 3, map, true);
+      result = instance.shortestPath(0, 0, 2, 3, map, false);
       assertEquals(8, result.size());
       System.out.println("-upper right to lower right");
-      result = instance.shortestPath(3, 4, 3, 0, map, true);
+      result = instance.shortestPath(3, 4, 3, 0, map, false);
       assertEquals(5, result.size());     
    }
    

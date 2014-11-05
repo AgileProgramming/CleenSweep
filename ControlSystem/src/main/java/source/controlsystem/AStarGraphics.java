@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import source.controlsystem.AStarPathFinder.Cell;
@@ -32,6 +34,7 @@ public class AStarGraphics{
    private LinkedList<Cell> openList;
    private LinkedList<Cell> closedList;
    private LinkedList<CellDescription> returnPath;
+   private static final Logger logger = Logger.getLogger("Exceptions");
 
    /*
     * Graphic instatiation, I'm not going into detail since this
@@ -68,6 +71,7 @@ public class AStarGraphics{
       try {
          Thread.sleep(1000);
       } catch (Exception e) {
+         logger.log(Level.WARNING, "Just to shutup Sonar", e);
       }
    }
 
@@ -141,6 +145,7 @@ public class AStarGraphics{
       try {
          Thread.sleep(100);
       } catch (Exception e) {
+         logger.log(Level.WARNING, "Just to shutup SonarA", e);
       }
       cSJP.paintComponent(floorBI.createGraphics());
       floorFrame.repaint();
