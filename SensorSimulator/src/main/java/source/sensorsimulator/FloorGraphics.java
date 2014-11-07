@@ -25,24 +25,23 @@ public class FloorGraphics {
    private BufferedImage floorBI;
    private FloorJPanel cSJP;
    private int floorYdimension;
-   private int floorXdimension;
    private List<VirtualHouse.CellDescription> floor;
    private static final Logger LOGGER = Logger.getLogger("Exceptions");
-   
+
    /*
     * Graphic instatiation, I'm not going into detail since this
     * is not actually part of the project requriements
     */
    public FloorGraphics(List<VirtualHouse.CellDescription> fp) {
       floor = fp;
-      floorXdimension = 0;
+      int floorXdimension = 0;
       floorYdimension = 0;
-      for ( int i = 0; i < fp.size(); i ++ ) {
-         if ( fp.get(i).locX() > floorXdimension ){
-            floorXdimension = fp.get(i).locX(); 
+      for (int i = 0; i < fp.size(); i++) {
+         if (fp.get(i).locX() > floorXdimension) {
+            floorXdimension = fp.get(i).locX();
          }
-         if ( fp.get(i).locY() > floorYdimension ){
-            floorYdimension = fp.get(i).locY(); 
+         if (fp.get(i).locY() > floorYdimension) {
+            floorYdimension = fp.get(i).locY();
          }
       }
       cSJP = new FloorJPanel();
