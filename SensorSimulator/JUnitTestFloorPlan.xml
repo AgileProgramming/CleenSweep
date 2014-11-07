@@ -1,9 +1,10 @@
 1 <home >
 2 <floor level ='1'>
 3 <! -- Guest Bedroom A -->
-4 <cell xs='0' ys='0' ss='1' ps='1214 ' ds='3' cs='1' />
-5 <cell xs='0' ys='1' ss='1' ps='1221 ' ds='2' cs='0' />
+4 <cell xs='0' ys='0' ss='1' ps='1212 ' ds='3' cs='1' />
+5 <cell xs='0' ys='1' ss='1' ps='1211 ' ds='2' cs='0' />
 6 <cell xs='1' ys='0' ss='2' ps='2112 ' ds='1' cs='0' />
 7 <cell xs='1' ys='1' ss='4' ps='2121 ' ds='0' cs='0' />
-8 </ floor >
-9 </ home >
+8 <cell xs='0' ys='2' ss='1' ps='2241 ' ds='2' cs='0' />
+9 </ floor >
+10 </ home >

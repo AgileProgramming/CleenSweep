@@ -415,7 +415,7 @@ public class VirtualHouse {
     * @param  SensorInterface si - reference to sensor interface for passing xy
     */
    public void getInitialLocation(SensorInterface si) {
-      if (si != null) {
+      if (si == null) {
          return;
       }
       if (!hasSentInitialLocation) {

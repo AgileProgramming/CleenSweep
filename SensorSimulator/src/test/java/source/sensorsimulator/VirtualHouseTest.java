@@ -182,7 +182,7 @@ public class VirtualHouseTest {
       assertEquals(tempSI.floor, floorType.BareFloor);
       assertEquals(tempSI.features[n.index()], feature.OPEN);
       assertEquals(tempSI.features[e.index()], feature.OPEN);
-      assertEquals(tempSI.features[s.index()], feature.STAIRS);
+      assertEquals(tempSI.features[w.index()], feature.OBSTICLE);
       assertEquals(tempSI.features[w.index()], feature.OBSTICLE);
       System.out.println("--Test starting cell of 0,1");
       instance.move(0, 1);
@@ -190,7 +190,7 @@ public class VirtualHouseTest {
       assertEquals(tempSI.atChargingStation, false);
       assertEquals(tempSI.dirtPresent, true);
       assertEquals(tempSI.floor, floorType.BareFloor);
-      assertEquals(tempSI.features[n.index()], feature.OBSTICLE);
+      assertEquals(tempSI.features[n.index()], feature.OPEN);
       assertEquals(tempSI.features[e.index()], feature.OPEN);
       assertEquals(tempSI.features[s.index()], feature.OPEN);
       assertEquals(tempSI.features[w.index()], feature.OBSTICLE);
