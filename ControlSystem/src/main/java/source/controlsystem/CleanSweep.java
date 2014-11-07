@@ -12,6 +12,9 @@ import source.sensorsimulator.VirtualHouse;
  * @date        07Nov2014
  */
 public class CleanSweep {
+   
+   private CleanSweep(){     
+   }
 
    public static void main(String[] args) {
       /*Get user input, .xml file name and if graphics are desired,
