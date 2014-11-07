@@ -15,7 +15,7 @@ import javax.swing.JPanel;
  * This class has absolutely nothing to do with the requirements of the 
  * Clean Sweep Project...it is just fun and aids in troubleshooting navigation.
  * 
- * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I1
  * @date        11Sep2014
  */
@@ -26,15 +26,15 @@ public class FloorGraphics {
    private FloorJPanel cSJP;
    private int floorYdimension;
    private int floorXdimension;
-   private List<VirtualHouse.CellDescription> Floor;
-   private static final Logger logger = Logger.getLogger("Exceptions");
+   private List<VirtualHouse.CellDescription> floor;
+   private static final Logger LOGGER = Logger.getLogger("Exceptions");
    
    /*
     * Graphic instatiation, I'm not going into detail since this
     * is not actually part of the project requriements
     */
    public FloorGraphics(List<VirtualHouse.CellDescription> fp) {
-      Floor = fp;
+      floor = fp;
       floorXdimension = 0;
       floorYdimension = 0;
       for ( int i = 0; i < fp.size(); i ++ ) {
@@ -46,7 +46,7 @@ public class FloorGraphics {
          }
       }
       cSJP = new FloorJPanel();
-      floorBI = new BufferedImage((floorXdimension * 50), (floorYdimension * 50), BufferedImage.TYPE_BYTE_BINARY);
+      floorBI = new BufferedImage(floorXdimension * 50, floorYdimension * 50, BufferedImage.TYPE_BYTE_BINARY);
       cSJP.paintComponent(floorBI.createGraphics());
       floorFrame = new JFrame("Clean Sweep Tracker");
       floorFrame.isAlwaysOnTop();
@@ -57,7 +57,7 @@ public class FloorGraphics {
       try {
          Thread.sleep(1000);
       } catch (Exception e) {
-         logger.log(Level.WARNING, "Just to shutup Sonar", e);
+         LOGGER.log(Level.WARNING, "Just to shutup Sonar", e);
       }
    }
 
@@ -74,36 +74,36 @@ public class FloorGraphics {
       public void paintComponent(Graphics g) {
          super.paintComponent(g);
          Graphics2D g2d = (Graphics2D) g;
-         for (int a = 0; a < Floor.size(); a++) {
-            int X = (Floor.get(a).locX * 50) + 5;
-            int Y = (floorYdimension * 50 + 5) - (Floor.get(a).locY * 50);
-            if (Floor.get(a).sI.features[3] == SensorInterface.feature.OBSTICLE) {
-               g2d.fillRect(X - 2, Y, 5, 50);
+         for (int a = 0; a < floor.size(); a++) {
+            int xCoordinate = (floor.get(a).locX * 50) + 5;
+            int yCoordinate = (floorYdimension * 50 + 5) - (floor.get(a).locY * 50);
+            if (floor.get(a).sI.features[3] == SensorInterface.feature.OBSTICLE) {
+               g2d.fillRect(xCoordinate - 2, yCoordinate, 5, 50);
             } else {
-               g2d.fillRect(X, Y, 1, 50);
+               g2d.fillRect(xCoordinate, yCoordinate, 1, 50);
             }
-            if (Floor.get(a).sI.features[1] == SensorInterface.feature.OBSTICLE) {
-               g2d.fillRect(X + 48, Y, 5, 50);
+            if (floor.get(a).sI.features[1] == SensorInterface.feature.OBSTICLE) {
+               g2d.fillRect(xCoordinate + 48, yCoordinate, 5, 50);
             } else {
-               g2d.fillRect(X + 50, Y, 1, 50);
+               g2d.fillRect(xCoordinate + 50, yCoordinate, 1, 50);
             }
-            if (Floor.get(a).sI.features[2] == SensorInterface.feature.OBSTICLE) {
-               g2d.fillRect(X, Y + 48, 50, 5);
+            if (floor.get(a).sI.features[2] == SensorInterface.feature.OBSTICLE) {
+               g2d.fillRect(xCoordinate, yCoordinate + 48, 50, 5);
             } else {
-               g2d.fillRect(X, Y + 50, 50, 1);
+               g2d.fillRect(xCoordinate, yCoordinate + 50, 50, 1);
             }
-            if (Floor.get(a).sI.features[0] == SensorInterface.feature.OBSTICLE) {
-               g2d.fillRect(X, Y - 2, 50, 5);
+            if (floor.get(a).sI.features[0] == SensorInterface.feature.OBSTICLE) {
+               g2d.fillRect(xCoordinate, yCoordinate - 2, 50, 5);
             } else {
-               g2d.fillRect(X, Y, 50, 1);
+               g2d.fillRect(xCoordinate, yCoordinate, 50, 1);
             }
 
-            if (Floor.get(a).sI.atChargingStation) {
-               g2d.drawString("Charge", X + 5, Y + 21);
-               g2d.drawString("Station", X + 6, Y + 35);
+            if (floor.get(a).sI.atChargingStation) {
+               g2d.drawString("Charge", xCoordinate + 5, yCoordinate + 21);
+               g2d.drawString("Station", xCoordinate + 6, yCoordinate + 35);
             }
-            if (Floor.get(a).isCurrentCell) {
-               g2d.fillRect(X + 5, Y + 5, 40, 40);
+            if (floor.get(a).isCurrentCell) {
+               g2d.fillRect(xCoordinate + 5, yCoordinate + 5, 40, 40);
             }
          }
       }
@@ -112,11 +112,11 @@ public class FloorGraphics {
    /*
     * Updates jpanel graphics after witing 250 milliseconds
     */
-   public void UpdateGraphics() {
+   public void updateGraphics() {
       try {
          Thread.sleep(250);
       } catch (Exception e) {
-         logger.log(Level.WARNING, "Just to shutup SonarA", e);
+         LOGGER.log(Level.WARNING, "Just to shutup SonarA", e);
       }
       cSJP.paintComponent(floorBI.createGraphics());
       floorFrame.repaint();
@@ -125,11 +125,11 @@ public class FloorGraphics {
    /*
     * Removes jpanel after waiting 2 seconds
     */
-   public void Remove() {
+   public void remove() {
       try {
          Thread.sleep(2000);
       } catch (Exception e) {
-         logger.log(Level.WARNING, "Just to shutup SonarB", e);
+         LOGGER.log(Level.WARNING, "Just to shutup SonarB", e);
       }
       floorFrame.dispose();
    }

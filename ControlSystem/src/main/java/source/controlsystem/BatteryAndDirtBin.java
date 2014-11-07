@@ -8,7 +8,7 @@ import source.sensorsimulator.SensorInterface.floorType;
  * The purpose if this class is to track and store battery charge information
  * and dirt bin capacity.
  * 
- * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I2
  * @date        25Sep2014
  */
@@ -44,7 +44,7 @@ public class BatteryAndDirtBin {
     * @param SensorInterface.floorType newFloorType
     */
    public void moved(floorType newFloorType) {
-      int drained = ((currentFloorType.charge() + newFloorType.charge()) / 2);
+      int drained = (currentFloorType.charge() + newFloorType.charge()) / 2;
       if (batteryCharge > drained) {
          batteryCharge -= drained;
       } else {

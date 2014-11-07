@@ -19,7 +19,7 @@ import source.sensorsimulator.SensorInterface.feature;
  * The class calculates the shortest path between a starting coordinate an ending
  * coordinate and provides a list containing the route
  *
- * @author Ilker Evernos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author Ilker Evernos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version I3
  * @date 08Nov2014
  */

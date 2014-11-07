@@ -20,7 +20,7 @@ import source.sensorsimulator.VirtualHouse;
  *
  * JUnit test for Control System
  * 
- * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I2
  * @date        25Sep2014
  */

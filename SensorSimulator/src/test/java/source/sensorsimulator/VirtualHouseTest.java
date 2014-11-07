@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  *
  * JUnit test for VirtualHouse which is the Sensor Simulator for the project
  * 
- * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I1
  * @date        13Sep2014
  */

@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  *
  * JUnit test for BatteryAndDirtBin which tracks battery life and dirt capacity
  * 
- * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I2
  * @date        25Sep2014
  */

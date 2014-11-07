@@ -20,7 +20,7 @@ import source.sensorsimulator.SensorInterface.floorType;
  *
  * JUnit test for BatteryAndDirtBin which tracks battery life and dirt capacity
  * 
- * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I3
  * @date        08Nov2014
  */

@@ -7,7 +7,7 @@ package source.sensorsimulator;
  * of the project assignment, data from the VirtualHouse (Sensor Simulator) to
  * the Clean Sweep Robot (Control System)
  * 
- * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I1
  * @date        11Sep2014
  */

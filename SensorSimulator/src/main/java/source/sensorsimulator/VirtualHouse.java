@@ -22,7 +22,7 @@ import java.util.*;
  * of the project assignment, data are included as well as interfaces
  * required to update the data.
  * 
- * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I1
  * @date        11Sep2014
  */
@@ -45,7 +45,8 @@ public class VirtualHouse{
    private boolean hasSentInitialLocation;
    private List<CellDescription> floorPlan;
    private static final Logger LOGGER = Logger.getLogger("Exceptions");
-
+   private static final String INVALID_FILE_ERROR_MESSAGE = "Bad input file format";
+   
    /**
     * Constructor for VirtualHouse                           
     * <p>
@@ -99,7 +100,6 @@ public class VirtualHouse{
     * and initializes the same variables as the regular constructor.
     */
    public VirtualHouse(boolean jUnitTesting){
-      jUnitTesting = false;
       useGraphics = false;
       hasSentInitialLocation = false;
       floorPlan = new LinkedList<>();
@@ -145,7 +145,7 @@ public class VirtualHouse{
             try{
                cellDescription.locX = Integer.parseInt(line.substring(startIndex, endIndex));
             }catch (Exception e){
-               LOGGER.log(Level.WARNING, "Bad input file format", e);
+               LOGGER.log(Level.WARNING, INVALID_FILE_ERROR_MESSAGE, e);
             }
             /*get Y*/
             startIndex = line.indexOf("ys") + 4;
@@ -153,7 +153,7 @@ public class VirtualHouse{
             try{
                cellDescription.locY = Integer.parseInt(line.substring(startIndex, endIndex));
             }catch (Exception e){
-               LOGGER.log(Level.WARNING, "Bad input file format", e);
+               LOGGER.log(Level.WARNING, INVALID_FILE_ERROR_MESSAGE, e);
             }
             /*get surface*/
             startIndex = line.indexOf("ss") + 4;
@@ -176,7 +176,7 @@ public class VirtualHouse{
             try{
                cellDescription.dirt = Integer.parseInt(line.substring(startIndex, endIndex));
             }catch (Exception e){
-               LOGGER.log(Level.WARNING, "Bad input file format", e);
+               LOGGER.log(Level.WARNING, INVALID_FILE_ERROR_MESSAGE, e);
             }
             if (cellDescription.dirt > 0){
                cellDescription.sI.dirtPresent = true;

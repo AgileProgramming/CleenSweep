@@ -19,7 +19,7 @@ import source.sensorsimulator.SensorInterface;
  * This class has absolutely nothing to do with the requirements of the
  * Clean Sweep Project. It aids in troubleshooting the A* search class
  *
- * @author      Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I3
  * @date        08Nov2014
  */

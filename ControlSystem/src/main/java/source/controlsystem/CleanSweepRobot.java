@@ -20,7 +20,7 @@ import source.sensorsimulator.VirtualHouse;
  * Vacuum Cleaner Team Project (Clean Sweep). The purpose is to provide the
  * required functionality of the Clean Sweep.
  *
- * @author Ilker Evrenos, David LeGare, Jeffrey Sharp, Doug Oda
+ * @author Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version I3
  * @date 03Nov2014
  */
