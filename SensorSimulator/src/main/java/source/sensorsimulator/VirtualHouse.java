@@ -6,7 +6,6 @@ import source.sensorsimulator.SensorInterface.floorType;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -27,17 +26,33 @@ import java.util.*;
  * @date        11Sep2014
  */
 public class VirtualHouse{
+   
    public class CellDescription{
-
       SensorInterface sI;
-      int dirt;
-      int locX;
-      int locY;
-      boolean isCurrentCell;
+      private int dirt;
+      private int locX;
+      private int locY;
+      private boolean isCurrentCell;
 
       public CellDescription(){
          sI = new SensorInterface();
       }
+      public SensorInterface sI(){
+         return sI;
+      }
+      public int dirt(){
+         return dirt;
+      }
+      public int locX(){
+         return locX;
+      }
+      public int locY(){
+         return locY;
+      }
+      public boolean isCurrentCell(){
+         return isCurrentCell;
+      }
+      
    }
    private FloorGraphics picture;
    private boolean useGraphics;

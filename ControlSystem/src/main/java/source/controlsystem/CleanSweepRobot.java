@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -26,12 +27,10 @@ import source.sensorsimulator.VirtualHouse;
  */
 public class CleanSweepRobot {
 
-   private Component frame;
-
    static class CellToVisit {
 
-      public int notVisitedX;
-      public int notVisitedY;
+      private int notVisitedX;
+      private int notVisitedY;
 
       public CellToVisit(int x, int y) {
          notVisitedX = x;
@@ -64,11 +63,12 @@ public class CleanSweepRobot {
       FINAL_TRIP_TO_CHARGING_STATION;
    }
    /*Private Variables*/
+   private Component frame;
    private VirtualHouse vH;
    private LinkedList<CellDescription> internalMap;
    private LinkedList<CellToVisit> destinations;
-   private LinkedList<CellToVisit> ShortestPath;
-   private LinkedList<String> tasksCompleted;
+   private LinkedList<CellToVisit> shortestPath;
+   private List<String> tasksCompleted;
    private BatteryAndDirtBin guages;
    private int currentX;
    private int currentY;
@@ -97,7 +97,7 @@ public class CleanSweepRobot {
       /*instantiate a few lists*/
       internalMap = new LinkedList<>();
       destinations = new LinkedList<>();
-      ShortestPath = new LinkedList<>();
+      shortestPath = new LinkedList<>();
       tasksCompleted = new LinkedList<>();
 
 
@@ -133,7 +133,7 @@ public class CleanSweepRobot {
       /*instantiate a few lists*/
       internalMap = new LinkedList<>();
       destinations = new LinkedList<>();
-      ShortestPath = new LinkedList<>();
+      shortestPath = new LinkedList<>();
       tasksCompleted = new LinkedList<>();
 
       /*get some initial information from the sensor simulator*/
@@ -159,89 +159,86 @@ public class CleanSweepRobot {
     *
     * @return false if all locations have been visited, true if more
     */
-   public boolean cleanSweepUpdate() {
+ public boolean cleanSweepUpdate() {
       boolean moved = false;
-      CellDescription Current = new CellDescription();
+      CellDescription currentCell = new CellDescription();
 
       /*Check Sensors*/
-      vH.sensorInformation(Current.sI);
-      AddCompletedTask(Current.sI,Log.CHECK_SENSOR);
-      Current.locX = currentX;
-      Current.locY = currentY;
+      vH.sensorInformation(currentCell.sI);
+      addCompletedTask(currentCell.sI,Log.CHECK_SENSOR);
+      currentCell.locX = currentX;
+      currentCell.locY = currentY;
 
       /*Execute the desired movment*/
-      while (!moved)
-      {
-         switch (movement) {
-            /*This is the normal movement for the clean sweep robot*/
-            case CLEANING:
-               /*Save cell description*/
-               addToInternalMap(Current);
-               /*Update destinations*/
-               updateNotVisitedList(Current);
+      while (!moved) {
+         
+         /*This is the normal movement for the clean sweep robot*/
+         if (movement == Movement.CLEANING){
+            /*Save cell description*/
+            addToInternalMap(currentCell);
+            /*Update destinations*/
+            updateNotVisitedList(currentCell);
 
-               /*Sweep if necessary*/
-               while (Current.sI.dirtPresent && !timeToReturntoChargingStation(Current)) {
-                  vH.vacuum();
-                  guages.swept();
-                  AddCompletedTask(Current.sI,Log.SWEEP);
-                  vH.sensorInformation(Current.sI);
-                  AddCompletedTask(Current.sI,Log.CHECK_SENSOR);
-               }
+            /*Sweep if necessary*/
+            while (currentCell.sI.dirtPresent && !timeToReturntoChargingStation(currentCell)) {
+               vH.vacuum();
+               guages.swept();
+               addCompletedTask(currentCell.sI,Log.SWEEP);
+               vH.sensorInformation(currentCell.sI);
+               addCompletedTask(currentCell.sI,Log.CHECK_SENSOR);
+            }
 
-               /*Move*/
-                /*If all locations have been visited then return to charging station*/
-               if (destinations.size() != 0) {                   
-                  if (!timeToReturntoChargingStation(Current)) {
-                     moveToNext(Current);
-                     moved = true;
-                  } else {
-                     movement = Movement.TO_CHARGING_STATION;
-                  }
-                  break;
-               } else {
-                  movement = Movement.FINAL_TRIP_TO_CHARGING_STATION;
-               } 
-           case TO_CHARGING_STATION:
-               if (currentX == chargingStationX && currentY == chargingStationY) {
-                  if (guages.dirtBinCapacity() == 0) {
-                     JOptionPane.showMessageDialog(frame,
-                             "EMPTY ME",
-                             "Clean Sweep Alert",
-                             JOptionPane.WARNING_MESSAGE);
-                     guages.emptyDirtBin();
-                  }
-                  guages.chargeBattery();
-                  movement = Movement.FROM_CHARGING_STATION;
-               } else {
-                  moveToRechargeStation(Current);
+            /*Move*/
+             /*If all locations have been visited then return to charging station*/
+            if (!destinations.isEmpty()) {                   
+               if (!timeToReturntoChargingStation(currentCell)) {
+                  moveToNext(currentCell);
                   moved = true;
-               }
-               break;
-            case FROM_CHARGING_STATION:
-               if (currentX == beforeChargingTripX && currentY == beforeChargingTripY) {
-                  movement = Movement.CLEANING;
                } else {
-                  moveFromRechargeStation(Current);
-                  moved = true;
+                  movement = Movement.TO_CHARGING_STATION;
                }
-               break;
-            case FINAL_TRIP_TO_CHARGING_STATION:
-               if (currentX == chargingStationX && currentY == chargingStationY) {
-                  /*All done so save internal map to file*/
-                  writeInternalMap();
-                  /*Save task list*/
-                  writeTaskList();
-                  return false;
-               } else {
-                   moveToRechargeStation(Current);
-                   moved = true;
+            } else {
+               movement = Movement.FINAL_TRIP_TO_CHARGING_STATION;
+            } 
+         }
+         
+         if (movement == Movement.TO_CHARGING_STATION){
+            if (currentX == chargingStationX && currentY == chargingStationY) {
+               if (guages.dirtBinCapacity() == 0) {
+                  JOptionPane.showMessageDialog(frame,
+                          "EMPTY ME",
+                          "Clean Sweep Alert",
+                          JOptionPane.WARNING_MESSAGE);
+                  guages.emptyDirtBin();
                }
-               break;
-            /*cannot get here but allow exit of while loop if the imposisble happens*/
-            default:
+               guages.chargeBattery();
+               movement = Movement.FROM_CHARGING_STATION;
+            } else {
+               moveToRechargeStation(currentCell);
                moved = true;
-               break;
+            }
+         }
+         
+         if (movement == Movement.FROM_CHARGING_STATION){
+            if (currentX == beforeChargingTripX && currentY == beforeChargingTripY) {
+               movement = Movement.CLEANING;
+            } else {
+               moveFromRechargeStation(currentCell);
+               moved = true;
+            }
+         }
+         
+         if (movement == Movement.FINAL_TRIP_TO_CHARGING_STATION){
+            if (currentX == chargingStationX && currentY == chargingStationY) {
+               /*All done so save internal map to file*/
+               writeInternalMap();
+               /*Save task list*/
+               writeTaskList();
+               return false;
+            } else {
+                moveToRechargeStation(currentCell);
+                moved = true;
+            }
          }
       }
       return true;
@@ -278,17 +275,17 @@ public class CleanSweepRobot {
     * @param CellDescription Current- name of cell from which to move
     */
    private void moveFromRechargeStation(CellDescription current) {
-      if (ShortestPath.size() == 0) {
+      if (shortestPath.isEmpty()) {
          AStarPathFinder pf = new AStarPathFinder();
-         ShortestPath = pf.shortestPath(currentX, currentY, beforeChargingTripX,
+         shortestPath = pf.shortestPath(currentX, currentY, beforeChargingTripX,
                  beforeChargingTripY, internalMap, false);
-         ShortestPath.removeLast();
+         shortestPath.removeLast();
       }
       /* move if desired and possible */
-      move(current, ShortestPath.getLast().notVisitedX, ShortestPath.getLast().notVisitedY);
+      move(current, shortestPath.getLast().notVisitedX, shortestPath.getLast().notVisitedY);
 
       /* Since we know that the path is valid remove it*/
-      ShortestPath.removeLast();
+      shortestPath.removeLast();
    }
 
    /**
@@ -299,18 +296,18 @@ public class CleanSweepRobot {
     * @param CellDescription Current- name of cell from which to move
     */
    private void moveToRechargeStation(CellDescription current) {
-      if (ShortestPath.size() == 0) {
+      if (shortestPath.isEmpty()) {
          beforeChargingTripX = currentX;
          beforeChargingTripY = currentY;
          AStarPathFinder pf = new AStarPathFinder();
-         ShortestPath = pf.shortestPath(currentX, currentY, chargingStationX, chargingStationY, internalMap, displayGraphics);
-         ShortestPath.removeLast(); 
+         shortestPath = pf.shortestPath(currentX, currentY, chargingStationX, chargingStationY, internalMap, displayGraphics);
+         shortestPath.removeLast(); 
       }
       /* move if desired and possible */
-      move(current, ShortestPath.getLast().notVisitedX, ShortestPath.getLast().notVisitedY);
+      move(current, shortestPath.getLast().notVisitedX, shortestPath.getLast().notVisitedY);
 
       /* Since we know that the path is valid */
-      ShortestPath.removeLast();
+      shortestPath.removeLast();
    }
 
    /**
@@ -376,7 +373,7 @@ public class CleanSweepRobot {
                SensorInterface ci = new SensorInterface();
                vH.sensorInformation(ci);
                guages.moved(ci.floor);
-               AddCompletedTask(ci, Log.MOVE);
+               addCompletedTask(ci, Log.MOVE);
                break;
             }
          }
@@ -519,7 +516,7 @@ public class CleanSweepRobot {
     * @param SensorInterface current - contains all current sensor information
     * @param Log action - what is being done
     */
-   private void AddCompletedTask(SensorInterface current, Log action) {
+   private void addCompletedTask(SensorInterface current, Log action) {
       String dp;
       String cs;
       if (current.dirtPresent) {
@@ -532,7 +529,7 @@ public class CleanSweepRobot {
       } else {
          cs = "No";
       }
-      tasksCompleted.addLast( action 
+      tasksCompleted.add( action 
               + ", " + currentY+ "/" +currentX
               + ", " + cs
               + ", " + current.floor

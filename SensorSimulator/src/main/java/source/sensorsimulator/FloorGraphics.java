@@ -38,11 +38,11 @@ public class FloorGraphics {
       floorXdimension = 0;
       floorYdimension = 0;
       for ( int i = 0; i < fp.size(); i ++ ) {
-         if ( fp.get(i).locX > floorXdimension ){
-            floorXdimension = fp.get(i).locX; 
+         if ( fp.get(i).locX() > floorXdimension ){
+            floorXdimension = fp.get(i).locX(); 
          }
-         if ( fp.get(i).locY > floorYdimension ){
-            floorYdimension = fp.get(i).locY; 
+         if ( fp.get(i).locY() > floorYdimension ){
+            floorYdimension = fp.get(i).locY(); 
          }
       }
       cSJP = new FloorJPanel();
@@ -75,8 +75,8 @@ public class FloorGraphics {
          super.paintComponent(g);
          Graphics2D g2d = (Graphics2D) g;
          for (int a = 0; a < floor.size(); a++) {
-            int xCoordinate = (floor.get(a).locX * 50) + 5;
-            int yCoordinate = (floorYdimension * 50 + 5) - (floor.get(a).locY * 50);
+            int xCoordinate = (floor.get(a).locX() * 50) + 5;
+            int yCoordinate = (floorYdimension * 50 + 5) - (floor.get(a).locY() * 50);
             if (floor.get(a).sI.features[3] == SensorInterface.feature.OBSTICLE) {
                g2d.fillRect(xCoordinate - 2, yCoordinate, 5, 50);
             } else {
@@ -102,7 +102,7 @@ public class FloorGraphics {
                g2d.drawString("Charge", xCoordinate + 5, yCoordinate + 21);
                g2d.drawString("Station", xCoordinate + 6, yCoordinate + 35);
             }
-            if (floor.get(a).isCurrentCell) {
+            if (floor.get(a).isCurrentCell()) {
                g2d.fillRect(xCoordinate + 5, yCoordinate + 5, 40, 40);
             }
          }
