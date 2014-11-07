@@ -88,7 +88,7 @@ public class VirtualHouse{
       /*Start graphics if desired*/
       if (useGraphics){
          picture = new FloorGraphics(floorPlan);
-         picture.UpdateGraphics();
+         picture.updateGraphics();
       }
       
    }
@@ -270,7 +270,7 @@ public class VirtualHouse{
     */
    public void remove(){
       if (useGraphics){
-         picture.Remove();
+         picture.remove();
       }
    }
 
@@ -301,7 +301,7 @@ public class VirtualHouse{
    public boolean move(int newX, int newY){
       /*update graphics if wanted*/
       if (useGraphics){
-         picture.UpdateGraphics();
+         picture.updateGraphics();
       }
       
       boolean movementOK = false;
