@@ -103,12 +103,12 @@ public class CleanSweepRobot {
 
       /*get some initial information from the sensor simulator*/
       SensorInterface ci = new SensorInterface();
-      vH.GetInitialLocation(ci);
+      vH.getInitialLocation(ci);
       currentX = ci.StartingXCoord;
       chargingStationX = ci.StartingXCoord;
       currentY = ci.StartingYCoord;
       chargingStationY = ci.StartingYCoord;
-      vH.SensorInformation(ci);
+      vH.sensorInformation(ci);
 
       /*setup internal sensors*/
       guages = new BatteryAndDirtBin(ci.floor);
@@ -140,7 +140,7 @@ public class CleanSweepRobot {
       SensorInterface ci = new SensorInterface();
       currentX = x;
       currentY = y;
-      vH.SensorInformation(ci);
+      vH.sensorInformation(ci);
 
       /*setup internal sensors*/
       guages = new BatteryAndDirtBin(ci.floor);
@@ -164,7 +164,7 @@ public class CleanSweepRobot {
       CellDescription Current = new CellDescription();
 
       /*Check Sensors*/
-      vH.SensorInformation(Current.sI);
+      vH.sensorInformation(Current.sI);
       AddCompletedTask(Current.sI,Log.CHECK_SENSOR);
       Current.locX = currentX;
       Current.locY = currentY;
@@ -182,10 +182,10 @@ public class CleanSweepRobot {
 
                /*Sweep if necessary*/
                while (Current.sI.dirtPresent && !timeToReturntoChargingStation(Current)) {
-                  vH.Vacuum();
+                  vH.vacuum();
                   guages.swept();
                   AddCompletedTask(Current.sI,Log.SWEEP);
-                  vH.SensorInformation(Current.sI);
+                  vH.sensorInformation(Current.sI);
                   AddCompletedTask(Current.sI,Log.CHECK_SENSOR);
                }
 
@@ -369,12 +369,12 @@ public class CleanSweepRobot {
                  || ((targetx < Current.locX) && (d.index() == direction.WEST.index())))
                  && (Current.sI.features[d.index()] == SensorInterface.feature.OPEN)) {
             /*If the mess above is true then actually move the darn thing*/
-            if (vH.Move(Current.locX + d.xOffset(), Current.locY + d.yOffset())) {
+            if (vH.move(Current.locX + d.xOffset(), Current.locY + d.yOffset())) {
                currentX = Current.locX + d.xOffset();
                currentY = Current.locY + d.yOffset();
                moved = true;
                SensorInterface ci = new SensorInterface();
-               vH.SensorInformation(ci);
+               vH.sensorInformation(ci);
                guages.moved(ci.floor);
                AddCompletedTask(ci, Log.MOVE);
                break;

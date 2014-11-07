@@ -60,17 +60,17 @@ public class VirtualHouseTest {
       SensorInterface tempSI = new SensorInterface();
       VirtualHouse instance = new VirtualHouse(true);
       System.out.println("--Call 3 times to remove dirt from 0,0");
-      instance.Vacuum();
-      instance.SensorInformation(tempSI);
+      instance.vacuum();
+      instance.sensorInformation(tempSI);
       assertEquals(tempSI.dirtPresent, true);
-      instance.Vacuum(); //remove 1 unit of dirt from 2
-      instance.SensorInformation(tempSI);
+      instance.vacuum(); //remove 1 unit of dirt from 2
+      instance.sensorInformation(tempSI);
       assertEquals(tempSI.dirtPresent, true);
-      instance.Vacuum(); //remove 1 unit of dirt from 1
-      instance.SensorInformation(tempSI);
+      instance.vacuum(); //remove 1 unit of dirt from 1
+      instance.sensorInformation(tempSI);
       assertEquals(tempSI.dirtPresent, false);
-      instance.Vacuum(); //remove 1 unit of dirt from 0
-      instance.SensorInformation(tempSI);
+      instance.vacuum(); //remove 1 unit of dirt from 0
+      instance.sensorInformation(tempSI);
       assertEquals(tempSI.dirtPresent, false);
    }
 
@@ -88,49 +88,49 @@ public class VirtualHouseTest {
       System.out.println("--Test diagonal moves");
       newX = 1;
       newY = 1;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, false);
       newX = 0;
       newY = 1;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, true);
       newX = 1;
       newY = 0;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, false);
       newX = 1;
       newY = 1;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, true);
       newX = 0;
       newY = 0;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, false);
       newX = 1;
       newY = 0;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, true);
       newX = 0;
       newY = 1;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, false);
       System.out.println("--Test moving to non-OPEN locations");
       newX = 2;
       newY = 0;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, false);
       newX = 0;
       newY = 0;
-      result = instance.Move(newX, newY);//just move back to check stairs
+      result = instance.move(newX, newY);//just move back to check stairs
       assertEquals(result, true);
       newX = 0;
       newY = -1;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, false);
       System.out.println("--Test for teleportation (totally non-adjacent cells)");
       newX = 0;
       newY = 3;
-      result = instance.Move(newX, newY);
+      result = instance.move(newX, newY);
       assertEquals(result, false);
 
    }
@@ -144,17 +144,17 @@ public class VirtualHouseTest {
       System.out.println("Test GetInitialLocation()");
       SensorInterface si = new SensorInterface();
       VirtualHouse instance = new VirtualHouse(true);
-      instance.GetInitialLocation(si);
+      instance.getInitialLocation(si);
       /*check if initial location is at 0,0 where charge station is located*/
 
       System.out.println("--Give it the first time");
       assertEquals(si.StartingXCoord, 0);
       assertEquals(si.StartingYCoord, 0);
-      instance.GetInitialLocation(si);
+      instance.getInitialLocation(si);
       /*verify that the second time a radically bad value is passed*/
 
       System.out.println("--Give garbage second time");
-      instance.GetInitialLocation(si);
+      instance.getInitialLocation(si);
       assertEquals(si.StartingXCoord, Integer.MAX_VALUE);
       assertEquals(si.StartingYCoord, Integer.MAX_VALUE);
    }
@@ -176,7 +176,7 @@ public class VirtualHouseTest {
       /*move around the very small test house and verify sensor information*/
 
       System.out.println("--Test starting cell of 0,0");
-      instance.SensorInformation(tempSI);
+      instance.sensorInformation(tempSI);
       assertEquals(tempSI.atChargingStation, true);
       assertEquals(tempSI.dirtPresent, true);
       assertEquals(tempSI.floor, floorType.BareFloor);
@@ -185,8 +185,8 @@ public class VirtualHouseTest {
       assertEquals(tempSI.features[s.index()], feature.STAIRS);
       assertEquals(tempSI.features[w.index()], feature.OBSTICLE);
       System.out.println("--Test starting cell of 0,1");
-      instance.Move(0, 1);
-      instance.SensorInformation(tempSI);
+      instance.move(0, 1);
+      instance.sensorInformation(tempSI);
       assertEquals(tempSI.atChargingStation, false);
       assertEquals(tempSI.dirtPresent, true);
       assertEquals(tempSI.floor, floorType.BareFloor);
@@ -195,8 +195,8 @@ public class VirtualHouseTest {
       assertEquals(tempSI.features[s.index()], feature.OPEN);
       assertEquals(tempSI.features[w.index()], feature.OBSTICLE);
       System.out.println("--Test starting cell of 1,1");
-      instance.Move(1, 1);
-      instance.SensorInformation(tempSI);
+      instance.move(1, 1);
+      instance.sensorInformation(tempSI);
       assertEquals(tempSI.atChargingStation, false);
       assertEquals(tempSI.dirtPresent, false);
       assertEquals(tempSI.floor, floorType.HighPileCarpet);
@@ -205,8 +205,8 @@ public class VirtualHouseTest {
       assertEquals(tempSI.features[s.index()], feature.OPEN);
       assertEquals(tempSI.features[w.index()], feature.OPEN);
       System.out.println("--Test starting cell of 1,0");
-      instance.Move(1, 0);
-      instance.SensorInformation(tempSI);
+      instance.move(1, 0);
+      instance.sensorInformation(tempSI);
       assertEquals(tempSI.atChargingStation, false);
       assertEquals(tempSI.dirtPresent, true);
       assertEquals(tempSI.floor, floorType.LowPileCarpet);

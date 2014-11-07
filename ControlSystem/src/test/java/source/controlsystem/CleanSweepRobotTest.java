@@ -111,7 +111,7 @@ public class CleanSweepRobotTest {
       direction w = direction.WEST;
       /*verify that instantation of the CleanSweepRobot got it's starting location*/
 
-      vh.GetInitialLocation(si);
+      vh.getInitialLocation(si);
       assertEquals(si.StartingXCoord, Integer.MAX_VALUE);
       assertEquals(si.StartingYCoord, Integer.MAX_VALUE);
       /*first move return true*/
@@ -122,7 +122,7 @@ public class CleanSweepRobotTest {
       /*have no access to robot variables but we can check Virtual house 
        * see where it has moved to*/
 
-      vh.SensorInformation(si);
+      vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, true);
       assertEquals(si.floor, floorType.LowPileCarpet);
@@ -132,7 +132,7 @@ public class CleanSweepRobotTest {
       assertEquals(si.features[w.index()], feature.OPEN);
       System.out.println("--verify move 2");
       assertEquals(csr.cleanSweepUpdate(), true);
-      vh.SensorInformation(si);
+      vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, false);
       assertEquals(si.floor, floorType.HighPileCarpet);
@@ -142,7 +142,7 @@ public class CleanSweepRobotTest {
       assertEquals(si.features[w.index()], feature.OPEN);
       System.out.println("--verify move 3");
       assertEquals(csr.cleanSweepUpdate(), true);
-      vh.SensorInformation(si);
+      vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, true);
       assertEquals(si.floor, floorType.BareFloor);
@@ -152,7 +152,7 @@ public class CleanSweepRobotTest {
       assertEquals(si.features[w.index()], feature.OBSTICLE);
       System.out.println("--verify move 4");
       assertEquals(csr.cleanSweepUpdate(), true);
-      vh.SensorInformation(si);
+      vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, true); 
       assertEquals(si.floor, floorType.BareFloor);
@@ -162,7 +162,7 @@ public class CleanSweepRobotTest {
       assertEquals(si.features[w.index()], feature.OBSTICLE);
         System.out.println("--verify move 5");
       assertEquals(csr.cleanSweepUpdate(), true);
-      vh.SensorInformation(si);
+      vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, false);
       assertEquals(si.floor, floorType.BareFloor);
@@ -172,7 +172,7 @@ public class CleanSweepRobotTest {
       assertEquals(si.features[w.index()], feature.OBSTICLE); 
         System.out.println("--verify move 6");
       assertEquals(csr.cleanSweepUpdate(), true);
-      vh.SensorInformation(si);
+      vh.sensorInformation(si);
       assertEquals(si.atChargingStation, true);
       assertEquals(si.dirtPresent, false);
       assertEquals(si.floor, floorType.BareFloor);
