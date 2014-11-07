@@ -159,11 +159,11 @@ public class VirtualHouse {
             /*make new cell*/
             CellDescription cellDescription = new CellDescription();
             cellDescription.sI.atChargingStation = true;
-            getFloorPlan_GetXY(line, cellDescription);
-            getFloorPlan_GetFloor(line, cellDescription);
-            getFloorPlan_GetDirt(line, cellDescription);
-            getFloorPlan_WS(line, cellDescription);
-            getFloorPlan_ChargingStation(line, cellDescription);
+            getFloorPlanGetXY(line, cellDescription);
+            getFloorPlanGetFloor(line, cellDescription);
+            getFloorPlanGetDirt(line, cellDescription);
+            getFloorPlanWS(line, cellDescription);
+            getFloorPlanChargingStation(line, cellDescription);
             /*save it*/
             floorPlan.add(cellDescription);
          }
@@ -182,7 +182,7 @@ public class VirtualHouse {
     * @param line -a single line of the input file
     * @param cellDescription - where to place the newly acquired info
     */
-   private void getFloorPlan_GetXY(String line, CellDescription cellDescription) {
+   private void getFloorPlanGetXY(String line, CellDescription cellDescription) {
       int startIndex;
       int endIndex;
       /*get x*/
@@ -210,7 +210,7 @@ public class VirtualHouse {
     * @param line -a single line of the input file
     * @param cellDescription - where to place the newly acquired info
     */
-   private void getFloorPlan_GetFloor(String line, CellDescription cellDescription) {
+   private void getFloorPlanGetFloor(String line, CellDescription cellDescription) {
       int startIndex;
       int endIndex;
       /*get surface*/
@@ -236,7 +236,7 @@ public class VirtualHouse {
     * @param line -a single line of the input file
     * @param cellDescription - where to place the newly acquired info
     */
-   private void getFloorPlan_GetDirt(String line, CellDescription cellDescription) {
+   private void getFloorPlanGetDirt(String line, CellDescription cellDescription) {
       int startIndex;
       int endIndex;
       /*get amount of dirt of floor*/
@@ -261,7 +261,7 @@ public class VirtualHouse {
     * @param line -a single line of the input file
     * @param cellDescription - where to place the newly acquired info
     */
-   private void getFloorPlan_WS(String line, CellDescription cellDescription) {
+   private void getFloorPlanWS(String line, CellDescription cellDescription) {
       int startIndex;
       /*get wall sensors*/
       direction n = direction.NORTH;
@@ -325,7 +325,7 @@ public class VirtualHouse {
     * @param line -a single line of the input file
     * @param cellDescription - where to place the newly acquired info
     */
-   private void getFloorPlan_ChargingStation(String line, CellDescription cellDescription) {
+   private void getFloorPlanChargingStation(String line, CellDescription cellDescription) {
       int startIndex;
       int endIndex;
       /*check if it is charging station*/
