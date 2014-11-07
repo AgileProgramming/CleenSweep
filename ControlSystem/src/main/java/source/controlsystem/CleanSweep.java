@@ -9,11 +9,9 @@ import source.sensorsimulator.VirtualHouse;
  * 
  * @author      Ilker Evrenos, David LeGare, Jeffrey Sharpe, Doug Oda
  * @version     I3
- * @date        08Nov2014
+ * @date        07Nov2014
  */
 public class CleanSweep {
-    
-    private CleanSweep(){}
 
    public static void main(String[] args) {
       /*Get user input, .xml file name and if graphics are desired,
@@ -24,9 +22,10 @@ public class CleanSweep {
       CleanSweepRobot robot = new CleanSweepRobot(cleanSweepInput);
 
       /*Move robot around unit all spaces have been visited*/
-      while (robot.cleanSweepUpdate()) {
+      boolean notFinished = true;
+      while ( notFinished ){
+         notFinished = robot.cleanSweepUpdate();
       }
-
       cleanSweepInput.remove();
    }
 }
