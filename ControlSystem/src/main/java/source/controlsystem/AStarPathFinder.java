@@ -183,11 +183,11 @@ public class AStarPathFinder {
             }
          }
          if (graphics) {
-            graphic.UpdateGraphics();
+            graphic.updateGraphics();
          }
       } while (tempx != sX || tempy != sY);
       if (graphics) {
-         graphic.Remove();
+         graphic.remove();
       }
       return returnValue;
    }
@@ -214,7 +214,7 @@ public class AStarPathFinder {
       /*loop unit finished*/
       for (;;) {
          if (graphics) {
-            graphic.UpdateGraphics();
+            graphic.updateGraphics();
          }
          /*find the lowest score*/
          int lowestFScore = Integer.MAX_VALUE;
