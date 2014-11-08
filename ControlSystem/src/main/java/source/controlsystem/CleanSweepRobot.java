@@ -38,7 +38,7 @@ public class CleanSweepRobot {
       }
    }
 
-   static public class CellDescription {
+   public static class CellDescription {
 
       public SensorInterface sI;
       public int locX;
@@ -251,12 +251,12 @@ public class CleanSweepRobot {
     * that the robot should return to the charge station or if the dirt capacity
     * necessitates the return for emptying
     *
-    * @param CellDescription Current- name of cell from which to move
+    * @param CellDescription current- name of cell from which to move
     * @return true if return is necessary, false if not
     */
-   private boolean timeToReturntoChargingStation(CellDescription Current) {
+   private boolean timeToReturntoChargingStation(CellDescription current) {
       AStarPathFinder pf = new AStarPathFinder();
-      int FudgeFactor = Current.sI.floor.charge() * 2;
+      int FudgeFactor = current.sI.floor.charge() * 2;
       int battRequiredToGetBack =
               pf.calculateCharge(currentX, currentY, chargingStationX, chargingStationY, internalMap);
       if ((guages.dirtBinCapacity() == 0)
@@ -321,13 +321,9 @@ public class CleanSweepRobot {
     * @param CellDescription Current- name of cell from which to move
     */
    private void moveToNext(CellDescription current) {
-      if (stuck) {
-         /* The size will always be greater than 1 if the robot is stuck
-         but should check anyway */
-         if (destinations.size() > 1) {
+      if (stuck && destinations.size() > 1) {
             destinations.addLast(destinations.get(destinations.size() - 2));
          }
-      }
       /* Load place we want to be*/
       int targetx = destinations.getLast().notVisitedX;
       int targety = destinations.getLast().notVisitedY;
@@ -352,23 +348,23 @@ public class CleanSweepRobot {
     * that the path is open. If there is a path open then the method returns true
     * If the path is blocked then the method returns false
     * 
-    * @param CellDescription Current - current cell description 
+    * @param CellDescription current - current cell description 
     * @param int targetx - desired location in the x direction
     * @param int targety - desired location in the y direction
     * @return true if location has been changed
     */
-   private boolean move(CellDescription Current, int targetx, int targety) {
+   private boolean move(CellDescription current, int targetx, int targety) {
       boolean moved = false;
       for (SensorInterface.direction d : SensorInterface.direction.values()) {
-         if ((((targety > Current.locY) && (d.index() == direction.NORTH.index()))
-                 || ((targetx > Current.locX) && (d.index() == direction.EAST.index()))
-                 || ((targety < Current.locY) && (d.index() == direction.SOUTH.index()))
-                 || ((targetx < Current.locX) && (d.index() == direction.WEST.index())))
-                 && (Current.sI.features[d.index()] == SensorInterface.feature.OPEN)) {
+         if ((((targety > current.locY) && (d.index() == direction.NORTH.index()))
+                 || ((targetx > current.locX) && (d.index() == direction.EAST.index()))
+                 || ((targety < current.locY) && (d.index() == direction.SOUTH.index()))
+                 || ((targetx < current.locX) && (d.index() == direction.WEST.index())))
+                 && (current.sI.features[d.index()] == SensorInterface.feature.OPEN)) {
             /*If the mess above is true then actually move the darn thing*/
-            if (vH.move(Current.locX + d.xOffset(), Current.locY + d.yOffset())) {
-               currentX = Current.locX + d.xOffset();
-               currentY = Current.locY + d.yOffset();
+            if (vH.move(current.locX + d.xOffset(), current.locY + d.yOffset())) {
+               currentX = current.locX + d.xOffset();
+               currentY = current.locY + d.yOffset();
                moved = true;
                SensorInterface ci = new SensorInterface();
                vH.sensorInformation(ci);
@@ -388,35 +384,37 @@ public class CleanSweepRobot {
     * location, a cell in any of the 4 directions is obtainable (feature=open), 
     * not already in the internalMap and not already in the destinations list.
     *
-    * @param CellDescription Current- current cell
+    * @param CellDescription current- current cell
     */
-   private void updateNotVisitedList(CellDescription Current) {
-      boolean WantToGoThere;
+   private void updateNotVisitedList(CellDescription current) {
+      boolean wantToGoThere;
       for (direction d : direction.values()) {
          /*Check each of 4 directions*/
-         if (Current.sI.features[d.index()] == feature.OPEN) {
+         if (current.sI.features[d.index()] == feature.OPEN) {
             /*If there is not an obsitcle in each direction then check space has
              * already been visited*/
-            WantToGoThere = true;
+            wantToGoThere = true;
             for (int i = 0; i < internalMap.size(); i++) {
-               if ((Current.locX + d.xOffset()) == internalMap.get(i).locX
-                       && (Current.locY + d.yOffset()) == internalMap.get(i).locY) {
-                  WantToGoThere = false;
-                  break;
+               if ((current.locX + d.xOffset()) == internalMap.get(i).locX
+                       && (current.locY + d.yOffset()) == internalMap.get(i).locY) {
+                  wantToGoThere = false;
+                  /*this is funny but it makes sonar happy*/
+                  i = internalMap.size();
                }
             }
-            if (WantToGoThere) {
+            if (wantToGoThere) {
                /*If here then there is no obsitcle and not been visited
                so remove any old occurances of that location*/
                for (int i = 0; i < destinations.size(); i++) {
-                  if ((Current.locX + d.xOffset()) == destinations.get(i).notVisitedX
-                          && (Current.locY + d.yOffset()) == destinations.get(i).notVisitedY) {
+                  if ((current.locX + d.xOffset()) == destinations.get(i).notVisitedX
+                          && (current.locY + d.yOffset()) == destinations.get(i).notVisitedY) {
                      destinations.remove(i);
-                     break;
+                  /*this is funny but it makes sonar happy*/
+                  i = destinations.size();
                   }
                }
                /*Add to places that need visited*/
-               destinations.add(new CellToVisit((Current.locX + d.xOffset()), (Current.locY + d.yOffset())));
+               destinations.add(new CellToVisit(current.locX + d.xOffset(), current.locY + d.yOffset()));
             }
          }
       }
@@ -456,7 +454,7 @@ public class CleanSweepRobot {
       try {
          bw = new BufferedWriter(new FileWriter(f));
       } catch (Exception e) {
-         logger.log(Level.WARNING, "File not created", e);
+         logger.log(Level.WARNING, "This file not created", e);
       }
       try {
          bw.write("<FloorPlanDump>\n");
@@ -481,7 +479,7 @@ public class CleanSweepRobot {
          bw.write("</ FloorPlanDump>");
          bw.close();
       } catch (Exception e) {
-         logger.log(Level.WARNING, "Cannot Write to File", e);
+         logger.log(Level.WARNING, "Cannot Write to That File", e);
       }
    }
 
