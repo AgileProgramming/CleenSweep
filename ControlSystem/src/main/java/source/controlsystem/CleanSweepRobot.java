@@ -427,17 +427,17 @@ public class CleanSweepRobot {
     *
     * @param CellDescription Current- name of cell to add to the floor plan
     */
-   private void addToInternalMap(CellDescription Current) {
+   private void addToInternalMap(CellDescription current) {
       boolean isNewLocation = true;
       for (int i = 0; i < internalMap.size(); i++) {
-         if (Current.locX == internalMap.get(i).locX
-                 && Current.locY == internalMap.get(i).locY) {
+         if (current.locX == internalMap.get(i).locX
+                 && current.locY == internalMap.get(i).locY) {
             isNewLocation = false;
             break;
          }
       }
       if (isNewLocation) {
-         internalMap.add(Current);
+         internalMap.add(current);
       }
    }
 
