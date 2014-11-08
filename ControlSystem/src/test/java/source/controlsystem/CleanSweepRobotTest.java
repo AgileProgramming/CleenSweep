@@ -125,7 +125,7 @@ public class CleanSweepRobotTest {
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, true);
-      assertEquals(si.floor, floorType.LowPileCarpet);
+      assertEquals(si.floor, floorType.LOWPILECARPET);
       assertEquals(si.features[n.index()], feature.OPEN);
       assertEquals(si.features[e.index()], feature.OBSTICLE);
       assertEquals(si.features[s.index()], feature.OBSTICLE);
@@ -135,7 +135,7 @@ public class CleanSweepRobotTest {
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, false);
-      assertEquals(si.floor, floorType.HighPileCarpet);
+      assertEquals(si.floor, floorType.HIGHPILECARPET);
       assertEquals(si.features[n.index()], feature.OBSTICLE);
       assertEquals(si.features[e.index()], feature.OBSTICLE);
       assertEquals(si.features[s.index()], feature.OPEN);
@@ -145,7 +145,7 @@ public class CleanSweepRobotTest {
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, true);
-      assertEquals(si.floor, floorType.BareFloor);
+      assertEquals(si.floor, floorType.BAREFLOOR);
       assertEquals(si.features[n.index()], feature.OPEN);
       assertEquals(si.features[e.index()], feature.OPEN);
       assertEquals(si.features[s.index()], feature.OPEN);
@@ -155,7 +155,7 @@ public class CleanSweepRobotTest {
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, true); 
-      assertEquals(si.floor, floorType.BareFloor);
+      assertEquals(si.floor, floorType.BAREFLOOR);
       assertEquals(si.features[n.index()], feature.STAIRS);
       assertEquals(si.features[e.index()], feature.OBSTICLE);
       assertEquals(si.features[s.index()], feature.OPEN);
@@ -165,7 +165,7 @@ public class CleanSweepRobotTest {
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, false);
-      assertEquals(si.floor, floorType.BareFloor);
+      assertEquals(si.floor, floorType.BAREFLOOR);
       assertEquals(si.features[n.index()], feature.OPEN);
       assertEquals(si.features[e.index()], feature.OPEN);
       assertEquals(si.features[s.index()], feature.OPEN);
@@ -175,7 +175,7 @@ public class CleanSweepRobotTest {
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, true);
       assertEquals(si.dirtPresent, false);
-      assertEquals(si.floor, floorType.BareFloor);
+      assertEquals(si.floor, floorType.BAREFLOOR);
       assertEquals(si.features[n.index()], feature.OPEN);
       assertEquals(si.features[e.index()], feature.OPEN);
       assertEquals(si.features[s.index()], feature.OBSTICLE);
