@@ -256,11 +256,11 @@ public class CleanSweepRobot {
     */
    private boolean timeToReturntoChargingStation(CellDescription current) {
       AStarPathFinder pf = new AStarPathFinder();
-      int FudgeFactor = current.sI.floor.charge() * 2;
+      int fudgeFactor = current.sI.floor.charge() * 2;
       int battRequiredToGetBack =
               pf.calculateCharge(currentX, currentY, chargingStationX, chargingStationY, internalMap);
       if ((guages.dirtBinCapacity() == 0)
-              || (guages.charge() <= (battRequiredToGetBack + FudgeFactor))) {
+              || (guages.charge() <= (battRequiredToGetBack + fudgeFactor))) {
 
          return true;
       }
