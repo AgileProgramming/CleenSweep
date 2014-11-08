@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -29,19 +30,19 @@ public class AStarGraphics{
    private BufferedImage floorBI;
    private FloorJPanel cSJP;
    private int floorYdimension;
-   private LinkedList<CellDescription> knownCells;
-   private LinkedList<Cell> openList;
-   private LinkedList<Cell> closedList;
-   private LinkedList<CellDescription> returnPath;
+   private List<CellDescription> knownCells;
+   private List<Cell> openList;
+   private List<Cell> closedList;
+   private List<CellDescription> returnPath;
    private static final Logger LOGGER = Logger.getLogger("Exceptions");
 
    /*
     * Graphic instatiation, I'm not going into detail since this
     * is not actually part of the project requriements
     */
-   public AStarGraphics(LinkedList<CellDescription> cd,
-                        LinkedList<Cell> ol, LinkedList<Cell> cl,
-                        LinkedList<CellDescription> rp ) {
+   public AStarGraphics(List<CellDescription> cd,
+                        List<Cell> ol, List<Cell> cl,
+                        List<CellDescription> rp ) {
       returnPath = rp;
       knownCells = cd;
       openList = ol;
