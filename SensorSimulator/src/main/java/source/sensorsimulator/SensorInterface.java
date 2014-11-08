@@ -114,6 +114,6 @@ public class SensorInterface {
     * do represent data that must be passed from the .xml stored in the 
     * VirtualHouse that are required by the CleanSweepRobot
     */
-   public int StartingXCoord;
-   public int StartingYCoord;
+   public int startingXCoord;
+   public int startingYCoord;
 }

@@ -112,8 +112,8 @@ public class CleanSweepRobotTest {
       /*verify that instantation of the CleanSweepRobot got it's starting location*/
 
       vh.getInitialLocation(si);
-      assertEquals(si.StartingXCoord, Integer.MAX_VALUE);
-      assertEquals(si.StartingYCoord, Integer.MAX_VALUE);
+      assertEquals(si.startingXCoord, Integer.MAX_VALUE);
+      assertEquals(si.startingYCoord, Integer.MAX_VALUE);
       /*first move return true*/
 
       CleanSweepRobot csr = new CleanSweepRobot(vh,0,0);

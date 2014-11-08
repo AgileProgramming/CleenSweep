@@ -242,8 +242,8 @@ public class AStarPathFinderTest {
             if ("1".equals(line.substring(A, B)))
             {
                CD.sI.atChargingStation = true;
-               CD.sI.StartingXCoord = CD.locX;
-               CD.sI.StartingYCoord = CD.locY;
+               CD.sI.startingXCoord = CD.locX;
+               CD.sI.startingYCoord = CD.locY;
             }
             else
             {

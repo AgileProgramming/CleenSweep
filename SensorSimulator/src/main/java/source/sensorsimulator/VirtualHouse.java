@@ -422,14 +422,14 @@ public class VirtualHouse {
          hasSentInitialLocation = true;
          for (int i = 0; i < floorPlan.size(); i++) {
             if (floorPlan.get(i).sI.atChargingStation) {
-               si.StartingXCoord = floorPlan.get(i).locX;
-               si.StartingYCoord = floorPlan.get(i).locY;
+               si.startingXCoord = floorPlan.get(i).locX;
+               si.startingYCoord = floorPlan.get(i).locY;
                break;
             }
          }
       } else {
-         si.StartingXCoord = Integer.MAX_VALUE;
-         si.StartingYCoord = Integer.MAX_VALUE;
+         si.startingXCoord = Integer.MAX_VALUE;
+         si.startingYCoord = Integer.MAX_VALUE;
       }
    }
 

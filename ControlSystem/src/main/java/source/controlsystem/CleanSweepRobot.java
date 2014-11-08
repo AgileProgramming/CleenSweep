@@ -104,10 +104,10 @@ public class CleanSweepRobot {
       /*get some initial information from the sensor simulator*/
       SensorInterface ci = new SensorInterface();
       vH.getInitialLocation(ci);
-      currentX = ci.StartingXCoord;
-      chargingStationX = ci.StartingXCoord;
-      currentY = ci.StartingYCoord;
-      chargingStationY = ci.StartingYCoord;
+      currentX = ci.startingXCoord;
+      chargingStationX = ci.startingXCoord;
+      currentY = ci.startingYCoord;
+      chargingStationY = ci.startingYCoord;
       vH.sensorInformation(ci);
 
       /*setup internal sensors*/

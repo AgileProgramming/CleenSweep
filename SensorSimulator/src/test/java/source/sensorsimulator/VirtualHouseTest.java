@@ -148,15 +148,15 @@ public class VirtualHouseTest {
       /*check if initial location is at 0,0 where charge station is located*/
 
       System.out.println("--Give it the first time");
-      assertEquals(si.StartingXCoord, 0);
-      assertEquals(si.StartingYCoord, 0);
+      assertEquals(si.startingXCoord, 0);
+      assertEquals(si.startingYCoord, 0);
       instance.getInitialLocation(si);
       /*verify that the second time a radically bad value is passed*/
 
       System.out.println("--Give garbage second time");
       instance.getInitialLocation(si);
-      assertEquals(si.StartingXCoord, Integer.MAX_VALUE);
-      assertEquals(si.StartingYCoord, Integer.MAX_VALUE);
+      assertEquals(si.startingXCoord, Integer.MAX_VALUE);
+      assertEquals(si.startingYCoord, Integer.MAX_VALUE);
    }
 
    /**
