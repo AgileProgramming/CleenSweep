@@ -104,10 +104,10 @@ public class SensorInterface {
    /*
     * Constructor instantiates the feature array
     */
-   public static final int numberOfDirections = 4;
+   public static final int NUMBEROFDIRECTIONS = 4;
 
    public SensorInterface() {
-      features = new feature[numberOfDirections];
+      features = new feature[NUMBEROFDIRECTIONS];
    }
    /*
     * Variables do not belong here since they do not represent sensors but 
