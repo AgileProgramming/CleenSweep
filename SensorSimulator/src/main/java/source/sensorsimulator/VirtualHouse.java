@@ -218,13 +218,13 @@ public class VirtualHouse {
       endIndex = line.indexOf('\'', startIndex);
       switch (line.substring(startIndex, endIndex)) {
          case "4":
-            cellDescription.sI.floor = floorType.HighPileCarpet;
+            cellDescription.sI.floor = floorType.HIGHPILECARPET;
             break;
          case "2":
-            cellDescription.sI.floor = floorType.LowPileCarpet;
+            cellDescription.sI.floor = floorType.LOWPILECARPET;
             break;
          default:
-            cellDescription.sI.floor = floorType.BareFloor;
+            cellDescription.sI.floor = floorType.BAREFLOOR;
             break;
       }
    }

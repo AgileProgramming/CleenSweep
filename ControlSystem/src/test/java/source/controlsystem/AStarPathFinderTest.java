@@ -148,13 +148,13 @@ public class AStarPathFinderTest {
             switch (line.substring(A, B))
             {
                case "4":
-                  CD.sI.floor = floorType.HighPileCarpet;
+                  CD.sI.floor = floorType.HIGHPILECARPET;
                   break;
                case "2":
-                  CD.sI.floor = floorType.LowPileCarpet;
+                  CD.sI.floor = floorType.LOWPILECARPET;
                   break;
                default:
-                  CD.sI.floor = floorType.BareFloor;
+                  CD.sI.floor = floorType.BAREFLOOR;
                   break;
             }
             /*get amount of dirt of floor*/
