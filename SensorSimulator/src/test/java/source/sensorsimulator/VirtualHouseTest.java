@@ -179,7 +179,7 @@ public class VirtualHouseTest {
       instance.sensorInformation(tempSI);
       assertEquals(tempSI.atChargingStation, true);
       assertEquals(tempSI.dirtPresent, true);
-      assertEquals(tempSI.floor, floorType.BAREFLOOR);
+      assertEquals(tempSI.floor, floorType.BareFloor);
       assertEquals(tempSI.features[n.index()], feature.OPEN);
       assertEquals(tempSI.features[e.index()], feature.OPEN);
       assertEquals(tempSI.features[w.index()], feature.OBSTICLE);
@@ -189,7 +189,7 @@ public class VirtualHouseTest {
       instance.sensorInformation(tempSI);
       assertEquals(tempSI.atChargingStation, false);
       assertEquals(tempSI.dirtPresent, true);
-      assertEquals(tempSI.floor, floorType.BAREFLOOR);
+      assertEquals(tempSI.floor, floorType.BareFloor);
       assertEquals(tempSI.features[n.index()], feature.OPEN);
       assertEquals(tempSI.features[e.index()], feature.OPEN);
       assertEquals(tempSI.features[s.index()], feature.OPEN);
@@ -199,7 +199,7 @@ public class VirtualHouseTest {
       instance.sensorInformation(tempSI);
       assertEquals(tempSI.atChargingStation, false);
       assertEquals(tempSI.dirtPresent, false);
-      assertEquals(tempSI.floor, floorType.HIGHPILECARPET);
+      assertEquals(tempSI.floor, floorType.HighPileCarpet);
       assertEquals(tempSI.features[n.index()], feature.OBSTICLE);
       assertEquals(tempSI.features[e.index()], feature.OBSTICLE);
       assertEquals(tempSI.features[s.index()], feature.OPEN);
@@ -209,7 +209,7 @@ public class VirtualHouseTest {
       instance.sensorInformation(tempSI);
       assertEquals(tempSI.atChargingStation, false);
       assertEquals(tempSI.dirtPresent, true);
-      assertEquals(tempSI.floor, floorType.LOWPILECARPET);
+      assertEquals(tempSI.floor, floorType.LowPileCarpet);
       assertEquals(tempSI.features[n.index()], feature.OPEN);
       assertEquals(tempSI.features[e.index()], feature.OBSTICLE);
       assertEquals(tempSI.features[s.index()], feature.OBSTICLE);
