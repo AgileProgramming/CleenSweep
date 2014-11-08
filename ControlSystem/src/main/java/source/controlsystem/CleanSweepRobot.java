@@ -81,7 +81,7 @@ public class CleanSweepRobot {
    private boolean displayGraphics;
    
    /*Exception log for IO*/
-   private static final Logger logger = Logger.getLogger("Exceptions");
+   private static final Logger LOGGER = Logger.getLogger("Exceptions");
 
    /**
     * Constructor for CleanSweepRobot <p> This method instantiates private
@@ -454,7 +454,7 @@ public class CleanSweepRobot {
       try {
          bw = new BufferedWriter(new FileWriter(f));
       } catch (Exception e) {
-         logger.log(Level.WARNING, "This file not created", e);
+         LOGGER.log(Level.WARNING, "This file not created", e);
       }
       try {
          bw.write("<FloorPlanDump>\n");
@@ -479,7 +479,7 @@ public class CleanSweepRobot {
          bw.write("</ FloorPlanDump>");
          bw.close();
       } catch (Exception e) {
-         logger.log(Level.WARNING, "Cannot Write to That File", e);
+         LOGGER.log(Level.WARNING, "Cannot Write to That File", e);
       }
    }
 
@@ -494,7 +494,7 @@ public class CleanSweepRobot {
       try {
          bw = new BufferedWriter(new FileWriter(f));
       } catch (Exception e) {
-         logger.log(Level.WARNING, "File not created", e);
+         LOGGER.log(Level.WARNING, "File not created", e);
       }
       try {
          bw.write("Action, Loc y/x, Chrg Station, Floor Type, Dirt Present, North, East, South, West, Battery, Dirt Capacity\n");
@@ -503,7 +503,7 @@ public class CleanSweepRobot {
          }
          bw.close();
       } catch (Exception e) {
-         logger.log(Level.WARNING, "Cannot Write to File", e);
+         LOGGER.log(Level.WARNING, "Cannot Write to File", e);
       }
    }
 
