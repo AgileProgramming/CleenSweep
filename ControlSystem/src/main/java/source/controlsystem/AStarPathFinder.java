@@ -271,8 +271,8 @@ public class AStarPathFinder {
                if (openList.get(i).cd.locX == (c.cd.locX + d.xOffset()) && openList.get(i).cd.locY == (c.cd.locY + d.yOffset())) {
                   /*ok one has been found so save the new one if the score is lower and discard the old one*/
                   if (generateNewCell(openList.get(i).cd, c).gScore < openList.get(i).gScore) {
-                     openList.remove(i);
                      openList.add(generateNewCell(openList.get(i).cd, c));
+                     openList.remove(i);
                   }
                   inOpenList = true;
                   break;
