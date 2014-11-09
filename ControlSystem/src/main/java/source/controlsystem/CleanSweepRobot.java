@@ -59,6 +59,7 @@ public class CleanSweepRobot {
    private enum Movement {
 
       CLEANING,
+      TO_NEXT_CLEANING_LOCATION,
       TO_CHARGING_STATION,
       FROM_CHARGING_STATION,
       FINAL_TRIP_TO_CHARGING_STATION;
@@ -77,7 +78,6 @@ public class CleanSweepRobot {
    private int chargingStationY;
    private int beforeChargingTripX;
    private int beforeChargingTripY;
-   private boolean stuck;
    private Movement movement;
    private boolean displayGraphics;
    /*Exception log for IO*/
@@ -115,7 +115,6 @@ public class CleanSweepRobot {
 
       /*intialize other variables*/
       movement = Movement.CLEANING;
-      stuck = false;
       displayGraphics = true;
    }
 
@@ -147,7 +146,6 @@ public class CleanSweepRobot {
 
       /*intialize other variables*/
       movement = Movement.CLEANING;
-      stuck = false;
       displayGraphics = false;
    }
 
@@ -173,13 +171,30 @@ public class CleanSweepRobot {
       while (!moved) {
          switch (movement) {
             case CLEANING:
-               moved = cleanSweepUpdateCleaning(currentCell);
+               moved = cleaningMappingAndMoving(currentCell);
+               break;
+            case TO_NEXT_CLEANING_LOCATION:
+               moveToNextCleaningLocation(currentCell);
+               moved = true;
                break;
             case TO_CHARGING_STATION:
-               moved = cleanSweepUpdateToChrgStation(currentCell);
+               if (currentX == chargingStationX && currentY == chargingStationY) {
+                  if (guages.dirtBinCapacity() == 0) {
+                     JOptionPane.showMessageDialog(frame,
+                             "EMPTY ME",
+                             "Clean Sweep Alert",
+                             JOptionPane.WARNING_MESSAGE);
+                     guages.emptyDirtBin();
+                  }
+                  guages.chargeBattery();
+                  movement = Movement.FROM_CHARGING_STATION;
+               } else {
+                  moveToRechargeStation(currentCell);
+                  moved = true;
+               }
                break;
             case FROM_CHARGING_STATION:
-               moved = cleanSweepUpdateFromChrgStation(currentCell);
+               moved = moveFromChargingStation(currentCell);
                break;
             case FINAL_TRIP_TO_CHARGING_STATION:
                if (currentX == chargingStationX && currentY == chargingStationY) {
@@ -187,6 +202,7 @@ public class CleanSweepRobot {
                   writeInternalMap();
                   /*Save task list*/
                   writeTaskList();
+                  /*Very ungracefully bail out of the program*/
                   return false;
                } else {
                   moveToRechargeStation(currentCell);
@@ -195,19 +211,26 @@ public class CleanSweepRobot {
                break;
             default:
                moved = true;
+               break;
          }
       }
       return true;
    }
 
    /**
-    * Unnecessary method to reduce complexity in the cleanSweepUpdate
+    * Move the robot to the last location in the destinations list
     * <p>
-    * Represents normal movement
-    * @param CellDescription currentCell - current location of robot
-    * @return true if moved false if no movement possible
+    * This method obtains the xy coordinates from the destinations list and
+    * moves the robot one legal move from the parameter location to the location
+    * if it is adjacent otherwise it changes movement to TO_NEXT_CLEANING_LOCATION
+    * and returns false. If there are no new destination then it changes
+    * movement to FINAL_TRIP_TO_CHARGING_STATION and if it is low on battery
+    * it changes movement to TO_CHARGING_STATION
+    *
+    * @param CellDescription Current- name of cell from which to move
+    * @return true if moved, false if next destination is not adjacent
     */
-   private boolean cleanSweepUpdateCleaning(CellDescription currentCell) {
+   private boolean cleaningMappingAndMoving(CellDescription currentCell) {
       boolean moved = false;
       /*Save cell description*/
       addToInternalMap(currentCell);
@@ -222,67 +245,119 @@ public class CleanSweepRobot {
          vH.sensorInformation(currentCell.sI);
          addCompletedTask(currentCell.sI, Log.CHECK_SENSOR);
       }
-
       /*Move*/
       /*If all locations have been visited then return to charging station*/
-      if (!destinations.isEmpty()) {
-         if (!timeToReturntoChargingStation(currentCell)) {
-            moveToNext(currentCell);
-            moved = true;
-         } else {
-            movement = Movement.TO_CHARGING_STATION;
-         }
-      } else {
+      if (destinations.isEmpty()) {
          movement = Movement.FINAL_TRIP_TO_CHARGING_STATION;
-      }
-      return moved;
-   }
-
-   /**
-    * Unnecessary method to reduce complexity in the cleanSweepUpdate
-    * <p>
-    * Represents movement to charging station if dirt bin is full or needs charge
-    * @param CellDescription currentCell - current location of robot
-    * @return true if moved false if no movement possible
-    */
-   private boolean cleanSweepUpdateToChrgStation(CellDescription currentCell) {
-      boolean moved = false;
-      if (currentX == chargingStationX && currentY == chargingStationY) {
-         if (guages.dirtBinCapacity() == 0) {
-            JOptionPane.showMessageDialog(frame,
-                    "EMPTY ME",
-                    "Clean Sweep Alert",
-                    JOptionPane.WARNING_MESSAGE);
-            guages.emptyDirtBin();
-         }
-         guages.chargeBattery();
-         movement = Movement.FROM_CHARGING_STATION;
+      } else if (timeToReturntoChargingStation(currentCell)) {
+         movement = Movement.TO_CHARGING_STATION;
       } else {
-         moveToRechargeStation(currentCell);
-         moved = true;
+         for (SensorInterface.direction d : SensorInterface.direction.values()) {
+            if ( currentCell.locX + d.xOffset() == destinations.getLast().notVisitedX &&
+                    currentCell.locY + d.yOffset() == destinations.getLast().notVisitedY ){
+               moved = move(currentCell, destinations.getLast().notVisitedX, destinations.getLast().notVisitedY);
+            }         
+         }
+         if (moved){
+            destinations.removeLast();
+         } else {
+            movement = Movement.TO_NEXT_CLEANING_LOCATION;
+         }
       }
-
       return moved;
    }
 
    /**
-    * Unnecessary method to reduce complexity in the cleanSweepUpdate
+    * Moves robot to next know unvisited cell
+    * <p>
+    * Movement used when the next cleaning location is not adjacent to the 
+    * last cell cleaned. This is part of normal movement/mapping for the clean sweep.
+    * Once the next cell in the destinations list is reached it changes movement
+    * back to CLEAN
+    * 
+    * @param CellDescription currentCell - current location of robot
+    */
+   private void moveToNextCleaningLocation(CellDescription currentCell) {
+      if (shortestPath.isEmpty()) {
+         AStarPathFinder pf = new AStarPathFinder();
+         /*lie to the AStarPathFinder by adding the target to the internal map
+          * temporarily. DO NOT FORGET TO REMOVE IT WHEN DONE*/
+         CellDescription cd = new CellDescription();
+         cd.locX = destinations.getLast().notVisitedX;
+         cd.locY = destinations.getLast().notVisitedY;
+         internalMap.addLast(cd);
+         /*get path*/
+         shortestPath = pf.shortestPath(currentX, currentY, destinations.getLast().notVisitedX,
+                 destinations.getLast().notVisitedY, internalMap, false);
+         /*remove temporarily added cell from internal map*/
+         internalMap.removeLast();
+         shortestPath.removeLast();
+      }
+      /* move if desired and possible */
+      move(currentCell, shortestPath.getLast().notVisitedX, shortestPath.getLast().notVisitedY);
+
+      /* Since we know that the path is valid */
+      shortestPath.removeLast();
+      if (currentX == destinations.getLast().notVisitedX
+              && currentY == destinations.getLast().notVisitedY) {
+         destinations.removeLast();
+         movement = Movement.CLEANING;
+      }
+   }
+
+   /**
     * Represents movement from charging station to last location
+    * <p>
+    * Follows the A* path from the charging station to the last location 
+    * before going to the charging station. In all cases the moveToRechargeStation()
+    * method should have been called before this one.
+    * 
     * @param CellDescription currentCell - current location of robot
     * @return true if moved false if no movement possible
     */
-   private boolean cleanSweepUpdateFromChrgStation(CellDescription currentCell) {
+   private boolean moveFromChargingStation(CellDescription currentCell) {
       boolean moved = false;
 
       if (currentX == beforeChargingTripX && currentY == beforeChargingTripY) {
          movement = Movement.CLEANING;
       } else {
-         moveFromRechargeStation(currentCell);
+         if (shortestPath.isEmpty()) {
+            AStarPathFinder pf = new AStarPathFinder();
+            shortestPath = pf.shortestPath(currentX, currentY, beforeChargingTripX,
+                    beforeChargingTripY, internalMap, false);
+            shortestPath.removeLast();
+         }
+         /* move if desired and possible */
+         move(currentCell, shortestPath.getLast().notVisitedX, shortestPath.getLast().notVisitedY);
          moved = true;
+         /* Since we know that the path is valid remove it*/
+         shortestPath.removeLast();
       }
       return moved;
    }
 
+   /**
+    * Move the robot along pre-chosen path 
+    * <p> 
+    * This method follows the path provided by the A* path finding object
+    *
+    * @param CellDescription Current- name of cell from which to move
+    */
+   private void moveToRechargeStation(CellDescription current) {
+      if (shortestPath.isEmpty()) {
+         beforeChargingTripX = currentX;
+         beforeChargingTripY = currentY;
+         AStarPathFinder pf = new AStarPathFinder();
+         shortestPath = pf.shortestPath(currentX, currentY, chargingStationX, chargingStationY, internalMap, displayGraphics);
+         shortestPath.removeLast();
+      }
+      /* move if we know we can, it is in the shortestPath  */
+      move(current, shortestPath.getLast().notVisitedX, shortestPath.getLast().notVisitedY);
+
+      /* Since we know that the path is valid */
+      shortestPath.removeLast();
+   }   
+   
    /**
     * Determine if the robot should return to charging station to re-charge or empty
     * <p>
@@ -304,79 +379,6 @@ public class CleanSweepRobot {
          return true;
       }
       return false;
-   }
-
-   /**
-    * Move the robot along pre-chosen path 
-    * <p> 
-    * This method follows the path provided by the A* path finding object
-    *
-    * @param CellDescription Current- name of cell from which to move
-    */
-   private void moveFromRechargeStation(CellDescription current) {
-      if (shortestPath.isEmpty()) {
-         AStarPathFinder pf = new AStarPathFinder();
-         shortestPath = pf.shortestPath(currentX, currentY, beforeChargingTripX,
-                 beforeChargingTripY, internalMap, false);
-         shortestPath.removeLast();
-      }
-      /* move if desired and possible */
-      move(current, shortestPath.getLast().notVisitedX, shortestPath.getLast().notVisitedY);
-
-      /* Since we know that the path is valid remove it*/
-      shortestPath.removeLast();
-   }
-
-   /**
-    * Move the robot along pre-chosen path 
-    * <p> 
-    * This method follows the path provided by the A* path finding object
-    *
-    * @param CellDescription Current- name of cell from which to move
-    */
-   private void moveToRechargeStation(CellDescription current) {
-      if (shortestPath.isEmpty()) {
-         beforeChargingTripX = currentX;
-         beforeChargingTripY = currentY;
-         AStarPathFinder pf = new AStarPathFinder();
-         shortestPath = pf.shortestPath(currentX, currentY, chargingStationX, chargingStationY, internalMap, displayGraphics);
-         shortestPath.removeLast();
-      }
-      /* move if desired and possible */
-      move(current, shortestPath.getLast().notVisitedX, shortestPath.getLast().notVisitedY);
-
-      /* Since we know that the path is valid */
-      shortestPath.removeLast();
-   }
-
-   /**
-    * Move the robot to or toward the last location in the destinations list
-    * <p>
-    * This method obtains the xy coordinates from the destinations list and
-    * moves the robot one legal move from the parameter location to or toward
-    * the destination. If moving toward the destination is not possible then try
-    * the next to last location on the destinations list.
-    *
-    * @param CellDescription Current- name of cell from which to move
-    */
-   private void moveToNext(CellDescription current) {
-      if (stuck && destinations.size() > 1) {
-         destinations.addLast(destinations.get(destinations.size() - 2));
-      }
-      /* Load place we want to be*/
-      int targetx = destinations.getLast().notVisitedX;
-      int targety = destinations.getLast().notVisitedY;
-
-      /* Check in all 4 directions and move if desired and possible */
-      stuck = !move(current, targetx, targety);
-
-      /*If we have moved to the last location on the list then remove it
-       * since it is no longer a destination
-       */
-      if (currentX == destinations.getLast().notVisitedX
-              && currentX == destinations.getLast().notVisitedX) {
-         destinations.removeLast();
-      }
    }
 
    /**
