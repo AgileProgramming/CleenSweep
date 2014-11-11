@@ -171,13 +171,18 @@ public class CleanSweepRobot {
       while (!moved) {
          switch (movement) {
             case CLEANING:
-               moved = cleaningMappingAndMoving(currentCell);
-               break;
-            case TO_NEXT_CLEANING_LOCATION:
-               moveToNextCleaningLocation(currentCell);
-               moved = true;
-               break;
-            case TO_CHARGING_STATION:
+              moved = cleaningMappingAndMoving(currentCell);
+              break;
+           case TO_NEXT_CLEANING_LOCATION:
+              if (timeToReturntoChargingStation(currentCell)) {
+                 movement = Movement.TO_CHARGING_STATION;
+                 shortestPath.clear();
+                 break;
+              }
+              moveToNextCleaningLocation(currentCell);
+              moved = true;
+              break;
+           case TO_CHARGING_STATION:
                if (currentX == chargingStationX && currentY == chargingStationY) {
                   if (guages.dirtBinCapacity() == 0) {
                      JOptionPane.showMessageDialog(frame,
@@ -256,7 +261,7 @@ public class CleanSweepRobot {
             if ( currentCell.locX + d.xOffset() == destinations.getLast().notVisitedX &&
                     currentCell.locY + d.yOffset() == destinations.getLast().notVisitedY ){
                moved = move(currentCell, destinations.getLast().notVisitedX, destinations.getLast().notVisitedY);
-            }         
+            }
          }
          if (moved){
             destinations.removeLast();
@@ -270,11 +275,11 @@ public class CleanSweepRobot {
    /**
     * Moves robot to next know unvisited cell
     * <p>
-    * Movement used when the next cleaning location is not adjacent to the 
+    * Movement used when the next cleaning location is not adjacent to the
     * last cell cleaned. This is part of normal movement/mapping for the clean sweep.
     * Once the next cell in the destinations list is reached it changes movement
     * back to CLEAN
-    * 
+    *
     * @param CellDescription currentCell - current location of robot
     */
    private void moveToNextCleaningLocation(CellDescription currentCell) {
@@ -308,10 +313,10 @@ public class CleanSweepRobot {
    /**
     * Represents movement from charging station to last location
     * <p>
-    * Follows the A* path from the charging station to the last location 
+    * Follows the A* path from the charging station to the last location
     * before going to the charging station. In all cases the moveToRechargeStation()
     * method should have been called before this one.
-    * 
+    *
     * @param CellDescription currentCell - current location of robot
     * @return true if moved false if no movement possible
     */
@@ -337,8 +342,8 @@ public class CleanSweepRobot {
    }
 
    /**
-    * Move the robot along pre-chosen path 
-    * <p> 
+    * Move the robot along pre-chosen path
+    * <p>
     * This method follows the path provided by the A* path finding object
     *
     * @param CellDescription Current- name of cell from which to move
@@ -356,8 +361,8 @@ public class CleanSweepRobot {
 
       /* Since we know that the path is valid */
       shortestPath.removeLast();
-   }   
-   
+   }
+
    /**
     * Determine if the robot should return to charging station to re-charge or empty
     * <p>
@@ -388,8 +393,8 @@ public class CleanSweepRobot {
     * sent as parameters after checking in the correct direction to verify
     * that the path is open. If there is a path open then the method returns true
     * If the path is blocked then the method returns false
-    * 
-    * @param CellDescription current - current cell description 
+    *
+    * @param CellDescription current - current cell description
     * @param int targetx - desired location in the x direction
     * @param int targety - desired location in the y direction
     * @return true if location has been changed
@@ -421,8 +426,8 @@ public class CleanSweepRobot {
    /**
     * Add cells to list of cells that need to be visited
     * <p>
-    * This method checks to see if, from the perspective of the current xy 
-    * location, a cell in any of the 4 directions is obtainable (feature=open), 
+    * This method checks to see if, from the perspective of the current xy
+    * location, a cell in any of the 4 directions is obtainable (feature=open),
     * not already in the internalMap and not already in the destinations list.
     *
     * @param CellDescription current- current cell
@@ -481,8 +486,8 @@ public class CleanSweepRobot {
    }
 
    /**
-    * Write internal map to file 
-    * <p> 
+    * Write internal map to file
+    * <p>
     * This method writes the saved internal map
     * to a file called "FloorPlanDump.xml" in the same format as the project
     * input file.
@@ -524,7 +529,7 @@ public class CleanSweepRobot {
 
    /**
     * Write log if activities to file
-    * <p> 
+    * <p>
     * This method writes the activity log to a file called ActivityLog.csv.
     */
    private void writeTaskList() {
@@ -548,7 +553,7 @@ public class CleanSweepRobot {
 
    /**
     * Add all sensor information to the log
-    * 
+    *
     * @param SensorInterface current - contains all current sensor information
     * @param Log action - what is being done
     */
