@@ -30,10 +30,10 @@ public class CleanSweepRobotTest {
    private final static String[] floorDump = {
    "<FloorPlanDump>",
    "<cell xs='0' ys='0' ss='1' ps='1212' ds='0' cs='1' />",
-   "<cell xs='1' ys='0' ss='2' ps='2112' ds='0' cs='0' />",
-   "<cell xs='1' ys='1' ss='4' ps='2121' ds='0' cs='0' />",
-   "<cell xs='0' ys='1' ss='1' ps='1211' ds='0' cs='0' />",
-   "<cell xs='0' ys='2' ss='1' ps='2241' ds='0' cs='0' />",
+   "<cell xs='1' ys='0' ss='1' ps='2112' ds='0' cs='0' />",
+   "<cell xs='1' ys='1' ss='1' ps='2221' ds='0' cs='0' />",
+   "<cell xs='0' ys='1' ss='4' ps='2211' ds='0' cs='0' />",
+   "<cell xs='0' ys='2' ss='2' ps='2241' ds='0' cs='0' />",
    "</ FloorPlanDump>"
    };
    
@@ -46,28 +46,15 @@ public class CleanSweepRobotTest {
 "CHECK_SENSOR, 0/0, Yes, BareFloor, Yes,OPEN,OPEN,OBSTICLE,OBSTICLE,48.0,48",
 "SWEEP, 0/0, Yes, BareFloor, Yes,OPEN,OPEN,OBSTICLE,OBSTICLE,47.0,47",
 "CHECK_SENSOR, 0/0, Yes, BareFloor, No,OPEN,OPEN,OBSTICLE,OBSTICLE,47.0,47",
-"MOVE, 0/1, No, LowPileCarpet, Yes,OPEN,OBSTICLE,OBSTICLE,OPEN,45.5,47",
-"CHECK_SENSOR, 0/1, No, LowPileCarpet, Yes,OPEN,OBSTICLE,OBSTICLE,OPEN,45.5,47",
-"SWEEP, 0/1, No, LowPileCarpet, Yes,OPEN,OBSTICLE,OBSTICLE,OPEN,43.5,46",
-"CHECK_SENSOR, 0/1, No, LowPileCarpet, No,OPEN,OBSTICLE,OBSTICLE,OPEN,43.5,46",
-"MOVE, 1/1, No, HighPileCarpet, No,OBSTICLE,OBSTICLE,OPEN,OPEN,41.0,46",
-"CHECK_SENSOR, 1/1, No, HighPileCarpet, No,OBSTICLE,OBSTICLE,OPEN,OPEN,41.0,46",
-"MOVE, 1/0, No, BareFloor, Yes,OPEN,OPEN,OPEN,OBSTICLE,39.0,46",
-"CHECK_SENSOR, 1/0, No, BareFloor, Yes,OPEN,OPEN,OPEN,OBSTICLE,39.0,46",
-"SWEEP, 1/0, No, BareFloor, Yes,OPEN,OPEN,OPEN,OBSTICLE,38.0,45",
-"CHECK_SENSOR, 1/0, No, BareFloor, Yes,OPEN,OPEN,OPEN,OBSTICLE,38.0,45",
-"SWEEP, 1/0, No, BareFloor, Yes,OPEN,OPEN,OPEN,OBSTICLE,37.0,44",
-"CHECK_SENSOR, 1/0, No, BareFloor, No,OPEN,OPEN,OPEN,OBSTICLE,37.0,44",
-"MOVE, 2/0, No, BareFloor, Yes,STAIRS,OBSTICLE,OPEN,OBSTICLE,36.0,44",
-"CHECK_SENSOR, 2/0, No, BareFloor, Yes,STAIRS,OBSTICLE,OPEN,OBSTICLE,36.0,44",
-"SWEEP, 2/0, No, BareFloor, Yes,STAIRS,OBSTICLE,OPEN,OBSTICLE,35.0,43",
-"CHECK_SENSOR, 2/0, No, BareFloor, Yes,STAIRS,OBSTICLE,OPEN,OBSTICLE,35.0,43",
-"SWEEP, 2/0, No, BareFloor, Yes,STAIRS,OBSTICLE,OPEN,OBSTICLE,34.0,42",
-"CHECK_SENSOR, 2/0, No, BareFloor, No,STAIRS,OBSTICLE,OPEN,OBSTICLE,34.0,42",
-"MOVE, 1/0, No, BareFloor, No,OPEN,OPEN,OPEN,OBSTICLE,33.0,42",
-"CHECK_SENSOR, 1/0, No, BareFloor, No,OPEN,OPEN,OPEN,OBSTICLE,33.0,42",
-"MOVE, 0/0, Yes, BareFloor, No,OPEN,OPEN,OBSTICLE,OBSTICLE,32.0,42",
-"CHECK_SENSOR, 0/0, Yes, BareFloor, No,OPEN,OPEN,OBSTICLE,OBSTICLE,32.0,42"};
+"MOVE, 0/1, No, BareFloor, Yes,OPEN,OBSTICLE,OBSTICLE,OPEN,46.0,47",
+"CHECK_SENSOR, 0/1, No, BareFloor, Yes,OPEN,OBSTICLE,OBSTICLE,OPEN,46.0,47",
+"SWEEP, 0/1, No, BareFloor, Yes,OPEN,OBSTICLE,OBSTICLE,OPEN,45.0,46",
+"CHECK_SENSOR, 0/1, No, BareFloor, No,OPEN,OBSTICLE,OBSTICLE,OPEN,45.0,46",
+"MOVE, 1/1, No, BareFloor, Yes,OBSTICLE,OBSTICLE,OPEN,OBSTICLE,44.0,46",
+"CHECK_SENSOR, 1/1, No, BareFloor, Yes,OBSTICLE,OBSTICLE,OPEN,OBSTICLE,44.0,46",
+"SWEEP, 1/1, No, BareFloor, Yes,OBSTICLE,OBSTICLE,OPEN,OBSTICLE,43.0,45",
+"CHECK_SENSOR, 1/1, No, BareFloor, Yes,OBSTICLE,OBSTICLE,OPEN,OBSTICLE,43.0,45",
+"SWEEP, 1/1, No, BareFloor, Yes,OBSTICLE,OBSTICLE,OPEN,OBSTICLE,42.0,44"};
 
    public CleanSweepRobotTest() {
    }
@@ -125,7 +112,7 @@ public class CleanSweepRobotTest {
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, true);
-      assertEquals(si.floor, floorType.LowPileCarpet);
+      assertEquals(si.floor, floorType.BareFloor);
       assertEquals(si.features[n.index()], feature.OPEN);
       assertEquals(si.features[e.index()], feature.OBSTICLE);
       assertEquals(si.features[s.index()], feature.OBSTICLE);
@@ -134,43 +121,49 @@ public class CleanSweepRobotTest {
       assertEquals(csr.cleanSweepUpdate(), true);
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
-      assertEquals(si.dirtPresent, false);
-      assertEquals(si.floor, floorType.HighPileCarpet);
+      assertEquals(si.dirtPresent, true);
+      assertEquals(si.floor, floorType.BareFloor);
       assertEquals(si.features[n.index()], feature.OBSTICLE);
       assertEquals(si.features[e.index()], feature.OBSTICLE);
       assertEquals(si.features[s.index()], feature.OPEN);
-      assertEquals(si.features[w.index()], feature.OPEN);
-      System.out.println("--verify move 3");
+      assertEquals(si.features[w.index()], feature.OBSTICLE);
+      System.out.println("--verify move battery low return to charging station");
       assertEquals(csr.cleanSweepUpdate(), true);
+      assertEquals(csr.cleanSweepUpdate(), true);
+      vh.sensorInformation(si);
+      assertEquals(si.atChargingStation, true);
+      assertEquals(csr.cleanSweepUpdate(), true);
+      assertEquals(csr.cleanSweepUpdate(), true);
+      System.out.println("--and back to location where it ran out of battery");
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, true);
       assertEquals(si.floor, floorType.BareFloor);
+      assertEquals(si.features[n.index()], feature.OBSTICLE);
+      assertEquals(si.features[e.index()], feature.OBSTICLE);
+      assertEquals(si.features[s.index()], feature.OPEN);
+      assertEquals(si.features[w.index()], feature.OBSTICLE);     
+      assertEquals(csr.cleanSweepUpdate(), true);
+      assertEquals(csr.cleanSweepUpdate(), true);
+      assertEquals(csr.cleanSweepUpdate(), true);
+      vh.sensorInformation(si);
+      assertEquals(si.atChargingStation, false);
+      assertEquals(si.dirtPresent, true);
+      assertEquals(si.floor, floorType.HighPileCarpet);
       assertEquals(si.features[n.index()], feature.OPEN);
-      assertEquals(si.features[e.index()], feature.OPEN);
+      assertEquals(si.features[e.index()], feature.OBSTICLE);
       assertEquals(si.features[s.index()], feature.OPEN);
       assertEquals(si.features[w.index()], feature.OBSTICLE);
-      System.out.println("--verify move 4");
       assertEquals(csr.cleanSweepUpdate(), true);
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, false);
       assertEquals(si.dirtPresent, true); 
-      assertEquals(si.floor, floorType.BareFloor);
+      assertEquals(si.floor, floorType.LowPileCarpet);
       assertEquals(si.features[n.index()], feature.STAIRS);
       assertEquals(si.features[e.index()], feature.OBSTICLE);
       assertEquals(si.features[s.index()], feature.OPEN);
       assertEquals(si.features[w.index()], feature.OBSTICLE);
-        System.out.println("--verify move 5");
       assertEquals(csr.cleanSweepUpdate(), true);
-      vh.sensorInformation(si);
-      assertEquals(si.atChargingStation, false);
-      assertEquals(si.dirtPresent, false);
-      assertEquals(si.floor, floorType.BareFloor);
-      assertEquals(si.features[n.index()], feature.OPEN);
-      assertEquals(si.features[e.index()], feature.OPEN);
-      assertEquals(si.features[s.index()], feature.OPEN);
-      assertEquals(si.features[w.index()], feature.OBSTICLE); 
-        System.out.println("--verify move 6");
       assertEquals(csr.cleanSweepUpdate(), true);
       vh.sensorInformation(si);
       assertEquals(si.atChargingStation, true);
@@ -212,7 +205,8 @@ public class CleanSweepRobotTest {
       } catch (Exception t) {
          fail("ActivityLog.txt was not created");
       }
-      for (int i = 0; i < log.length; i++) {
+      /*just check the first 16 lines of the log file*/
+      for (int i = 0; i < 16; i++) {
          try {
             line = br.readLine();
          } catch (Exception t) {

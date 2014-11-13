@@ -143,7 +143,7 @@ public class AStarGraphics{
     */
    public void updateGraphics() {
       try {
-         Thread.sleep(100);
+         Thread.sleep(50);
       } catch (Exception e) {
          LOGGER.log(Level.WARNING, "Just to shutup SonarA", e);
       }

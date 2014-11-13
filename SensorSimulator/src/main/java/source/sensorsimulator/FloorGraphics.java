@@ -113,7 +113,7 @@ public class FloorGraphics {
     */
    public void updateGraphics() {
       try {
-         Thread.sleep(250);
+         Thread.sleep(150);
       } catch (Exception e) {
          LOGGER.log(Level.WARNING, "Just to shutup SonarA", e);
       }
