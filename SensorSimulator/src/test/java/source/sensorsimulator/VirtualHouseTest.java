@@ -181,7 +181,7 @@ public class VirtualHouseTest {
       System.out.println("--Test starting cell of 0,1");
       instance.move(0, 1);
       instance.sensorInformation(tempSI);
-      assertEquals(tempSI.atChargingStation, false);            
+      assertEquals(tempSI.atChargingStation, false);
       assertEquals(tempSI.dirtPresent, true);
       assertEquals(tempSI.floor, floorType.HighPileCarpet);
       assertEquals(tempSI.features[n.index()], feature.OPEN);

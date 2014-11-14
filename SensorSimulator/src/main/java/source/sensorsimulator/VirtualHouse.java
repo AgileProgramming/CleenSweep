@@ -2,9 +2,14 @@ package source.sensorsimulator;
 
 import source.sensorsimulator.SensorInterface.direction;
 import source.sensorsimulator.SensorInterface.feature;
+import source.sensorsimulator.SensorInterface.floorType;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
+import java.util.*;
 
 /**
  * SE-359/459 Clean Sweep Robotic Vacuum Cleaner Team Project
@@ -22,11 +27,45 @@ import javax.swing.JOptionPane;
  */
 public class VirtualHouse {
 
+   public class CellDescription {
+
+      SensorInterface sI;
+      private int dirt;
+      private int locX;
+      private int locY;
+      private boolean isCurrentCell;
+
+      public CellDescription() {
+         sI = new SensorInterface();
+      }
+
+      public SensorInterface sI() {
+         return sI;
+      }
+
+      public int dirt() {
+         return dirt;
+      }
+
+      public int locX() {
+         return locX;
+      }
+
+      public int locY() {
+         return locY;
+      }
+
+      public boolean isCurrentCell() {
+         return isCurrentCell;
+      }
+   }
    private FloorGraphics picture;
    private boolean useGraphics;
    private CellDescription currentCell;
    private boolean hasSentInitialLocation;
-   private FloorPlan floorPlan;
+   private List<CellDescription> floorPlan;
+   private static final Logger LOGGER = Logger.getLogger("Exceptions");
+   private static final String INVALID_FILE_ERROR_MESSAGE = "Bad input file format";
 
    /**
     * Constructor for VirtualHouse                           
@@ -43,6 +82,7 @@ public class VirtualHouse {
       String inputFile = null;
       useGraphics = true;
       hasSentInitialLocation = false;
+      floorPlan = new LinkedList<>();
 
       for (;;) {
          /*prompt user for inptu file*/
@@ -59,15 +99,15 @@ public class VirtualHouse {
          } else {
             JOptionPane.showMessageDialog(null, "Input file not found");
          }
+
       }
 
       /*Fead file and put information in to a list for future reference*/
-      floorPlan = new FloorPlan(inputFile);
-      currentCell = new CellDescription(floorPlan.getCell ( floorPlan.getInitialX(), floorPlan.getInitialY()));
+      getFloorPlan(inputFile);
 
       /*Start graphics if desired*/
       if (useGraphics) {
-         picture = new FloorGraphics(floorPlan.floorPlan());
+         picture = new FloorGraphics(floorPlan);
          picture.updateGraphics();
       }
 
@@ -84,11 +124,221 @@ public class VirtualHouse {
          useGraphics = false;
       }
       hasSentInitialLocation = false;
-      floorPlan = new FloorPlan("JUnitTestFloorPlan.xml");
-      currentCell = new CellDescription(floorPlan.getCell ( floorPlan.getInitialX(), floorPlan.getInitialY()));
+      floorPlan = new LinkedList<>();
+      getFloorPlan("JUnitTestFloorPlan.xml");
    }
 
+   /**
+    * Read Floor plan from .xml file                           
+    * <p>
+    * This method reads each line from the input file passed as a parameter
+    * and each line that contains cell information is parsed and stored in
+    * a CellDescription that is added to the floorPlan list
+    *
+    * @param  String inputFile - name of .xml file that contains floor plan
+    */
+   private void getFloorPlan(String inputFile) {
+      String line = null;
+      BufferedReader br = null;
+      File f = new File(inputFile);
+      try {
+         br = new BufferedReader(new FileReader(f));
+      } catch (Exception e) {
+         LOGGER.log(Level.WARNING, "File not Found", e);
+      }
+      for (;;) {
+         try {
+            line = br.readLine();
+         } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Cannot Read File", e);
+         }
+         if (line == null) {
+            break;
+         }
+         if (line.contains("cell")) {
+            /*make new cell*/
+            CellDescription cellDescription = new CellDescription();
+            cellDescription.sI.atChargingStation = true;
+            getFloorPlanGetXY(line, cellDescription);
+            getFloorPlanGetFloor(line, cellDescription);
+            getFloorPlanGetDirt(line, cellDescription);
+            getFloorPlanWS(line, cellDescription);
+            getFloorPlanChargingStation(line, cellDescription);
+            /*save it*/
+            floorPlan.add(cellDescription);
+         }
+      }
+      try {
+         br.close();
+      } catch (Exception e) {
+         LOGGER.log(Level.WARNING, "Cannot close file", e);
+      }
+   }
 
+   /**
+    * Unnecessary sub division of getFloorPlan
+    * <p>
+    * Get X and Y
+    * @param line -a single line of the input file
+    * @param cellDescription - where to place the newly acquired info
+    */
+   private void getFloorPlanGetXY(String line, CellDescription cellDescription) {
+      int startIndex;
+      int endIndex;
+      /*get x*/
+      startIndex = line.indexOf("xs") + 4;
+      endIndex = line.indexOf('\'', startIndex);
+      try {
+         cellDescription.locX = Integer.parseInt(line.substring(startIndex, endIndex));
+      } catch (Exception e) {
+         LOGGER.log(Level.WARNING, INVALID_FILE_ERROR_MESSAGE, e);
+      }
+      /*get Y*/
+      startIndex = line.indexOf("ys") + 4;
+      endIndex = line.indexOf('\'', startIndex);
+      try {
+         cellDescription.locY = Integer.parseInt(line.substring(startIndex, endIndex));
+      } catch (Exception e) {
+         LOGGER.log(Level.WARNING, INVALID_FILE_ERROR_MESSAGE, e);
+      }
+   }
+
+   /**
+    * Unnecessary sub division of getFloorPlan
+    * <p>
+    * Get FloorType
+    * @param line -a single line of the input file
+    * @param cellDescription - where to place the newly acquired info
+    */
+   private void getFloorPlanGetFloor(String line, CellDescription cellDescription) {
+      int startIndex;
+      int endIndex;
+      /*get surface*/
+      startIndex = line.indexOf("ss") + 4;
+      endIndex = line.indexOf('\'', startIndex);
+      switch (line.substring(startIndex, endIndex)) {
+         case "4":
+            cellDescription.sI.floor = floorType.HighPileCarpet;
+            break;
+         case "2":
+            cellDescription.sI.floor = floorType.LowPileCarpet;
+            break;
+         default:
+            cellDescription.sI.floor = floorType.BareFloor;
+            break;
+      }
+   }
+
+   /**
+    * Unnecessary sub division of getFloorPlan
+    * <p>
+    * Get Dirt Qty
+    * @param line -a single line of the input file
+    * @param cellDescription - where to place the newly acquired info
+    */
+   private void getFloorPlanGetDirt(String line, CellDescription cellDescription) {
+      int startIndex;
+      int endIndex;
+      /*get amount of dirt of floor*/
+      startIndex = line.indexOf("ds") + 4;
+      endIndex = line.indexOf('\'', startIndex);
+      try {
+         cellDescription.dirt = Integer.parseInt(line.substring(startIndex, endIndex));
+      } catch (Exception e) {
+         LOGGER.log(Level.WARNING, INVALID_FILE_ERROR_MESSAGE, e);
+      }
+      if (cellDescription.dirt > 0) {
+         cellDescription.sI.dirtPresent = true;
+      } else {
+         cellDescription.sI.dirtPresent = false;
+      }
+   }
+
+   /**
+    * Unnecessary sub division of getFloorPlan
+    * <p>
+    * Get Wall Sensor Info
+    * @param line -a single line of the input file
+    * @param cellDescription - where to place the newly acquired info
+    */
+   private void getFloorPlanWS(String line, CellDescription cellDescription) {
+      int startIndex;
+      /*get wall sensors*/
+      direction n = direction.NORTH;
+      direction e = direction.EAST;
+      direction s = direction.SOUTH;
+      direction w = direction.WEST;
+      startIndex = line.indexOf("ps") + 4;
+      switch (line.substring(startIndex, startIndex + 1)) {
+         case "1":
+            cellDescription.sI.features[e.index()] = SensorInterface.feature.OPEN;
+            break;
+         case "2":
+            cellDescription.sI.features[e.index()] = SensorInterface.feature.OBSTICLE;
+            break;
+         default:
+            cellDescription.sI.features[e.index()] = SensorInterface.feature.STAIRS;
+            break;
+      }
+      startIndex++;
+      switch (line.substring(startIndex, startIndex + 1)) {
+         case "1":
+            cellDescription.sI.features[w.index()] = SensorInterface.feature.OPEN;
+            break;
+         case "2":
+            cellDescription.sI.features[w.index()] = SensorInterface.feature.OBSTICLE;
+            break;
+         default:
+            cellDescription.sI.features[w.index()] = SensorInterface.feature.STAIRS;
+            break;
+      }
+      startIndex++;
+      switch (line.substring(startIndex, startIndex + 1)) {
+         case "1":
+            cellDescription.sI.features[n.index()] = SensorInterface.feature.OPEN;
+            break;
+         case "2":
+            cellDescription.sI.features[n.index()] = SensorInterface.feature.OBSTICLE;
+            break;
+         default:
+            cellDescription.sI.features[n.index()] = SensorInterface.feature.STAIRS;
+            break;
+      }
+      startIndex++;
+      switch (line.substring(startIndex, startIndex + 1)) {
+         case "1":
+            cellDescription.sI.features[s.index()] = SensorInterface.feature.OPEN;
+            break;
+         case "2":
+            cellDescription.sI.features[s.index()] = SensorInterface.feature.OBSTICLE;
+            break;
+         default:
+            cellDescription.sI.features[s.index()] = SensorInterface.feature.STAIRS;
+            break;
+      }
+   }
+
+   /**
+    * Unnecessary sub division of getFloorPlan
+    * <p>
+    * Get charging station
+    * @param line -a single line of the input file
+    * @param cellDescription - where to place the newly acquired info
+    */
+   private void getFloorPlanChargingStation(String line, CellDescription cellDescription) {
+      int startIndex;
+      int endIndex;
+      /*check if it is charging station*/
+      startIndex = line.indexOf("cs") + 4;
+      endIndex = line.indexOf('\'', startIndex);
+      if ("1".equals(line.substring(startIndex, endIndex))) {
+         cellDescription.sI.atChargingStation = true;
+         currentCell = cellDescription;
+         cellDescription.isCurrentCell = true;
+      } else {
+         cellDescription.sI.atChargingStation = false;
+      }
+   }
 
    /**
     * Remove jPanel                          
@@ -105,8 +355,8 @@ public class VirtualHouse {
     * Remove 1 unit of dirt from floor at current location                        
     */
    public void vacuum() {
-      if (currentCell.dirt() > 0) {
-         currentCell.dirt( currentCell.dirt() - 1);
+      if (currentCell.dirt > 0) {
+         currentCell.dirt--;
       }
    }
 
@@ -133,20 +383,24 @@ public class VirtualHouse {
 
       boolean movementOK = false;
       for (direction d : direction.values()) {
-         if ((currentCell.locX() + d.xOffset()) == newX
-                 && (currentCell.locY() + d.yOffset()) == newY
+         if ((currentCell.locX + d.xOffset()) == newX
+                 && (currentCell.locY + d.yOffset()) == newY
                  && currentCell.sI.features[d.index()] == feature.OPEN) {
             movementOK = true;
          }
       }
       if (movementOK) {
-         currentCell.isCurrentCell(false);
+         currentCell.isCurrentCell = false;
 
          /*Get new cell information*/
-         if ( floorPlan.getCell ( newX, newY ) != null ){
-         currentCell = floorPlan.getCell ( newX, newY );
+         for (int i = 0; i < floorPlan.size(); i++) {
+            if (floorPlan.get(i).locX == newX
+                    && floorPlan.get(i).locY == newY) {
+               currentCell = floorPlan.get(i);
+               break;
+            }
          }
-         currentCell.isCurrentCell(true);
+         currentCell.isCurrentCell = true;
       }
       return movementOK;
    }
@@ -166,8 +420,13 @@ public class VirtualHouse {
       }
       if (!hasSentInitialLocation) {
          hasSentInitialLocation = true;
-               si.startingXCoord = floorPlan.getInitialX();
-               si.startingYCoord = floorPlan.getInitialY();
+         for (int i = 0; i < floorPlan.size(); i++) {
+            if (floorPlan.get(i).sI.atChargingStation) {
+               si.startingXCoord = floorPlan.get(i).locX;
+               si.startingYCoord = floorPlan.get(i).locY;
+               break;
+            }
+         }
       } else {
          si.startingXCoord = Integer.MAX_VALUE;
          si.startingYCoord = Integer.MAX_VALUE;
@@ -190,7 +449,7 @@ public class VirtualHouse {
          }
          tempSI.floor = currentCell.sI.floor;
          tempSI.atChargingStation = currentCell.sI.atChargingStation;
-         if (currentCell.dirt() > 0) {
+         if (currentCell.dirt > 0) {
             tempSI.dirtPresent = true;
          } else {
             tempSI.dirtPresent = false;
