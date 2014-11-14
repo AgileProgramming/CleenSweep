@@ -25,14 +25,14 @@ public class FloorGraphics {
    private BufferedImage floorBI;
    private FloorJPanel cSJP;
    private int floorYdimension;
-   private List<VirtualHouse.CellDescription> floor;
+   private List<CellDescription> floor;
    private static final Logger LOGGER = Logger.getLogger("Exceptions");
 
    /*
     * Graphic instatiation, I'm not going into detail since this
     * is not actually part of the project requriements
     */
-   public FloorGraphics(List<VirtualHouse.CellDescription> fp) {
+   public FloorGraphics(List<CellDescription> fp) {
       floor = fp;
       int floorXdimension = 0;
       floorYdimension = 0;
