@@ -31,20 +31,7 @@ public class CellDescription {
     * @param cd CellDescription to be copied
     */
    public CellDescription(CellDescription cd) {
-      this.dirt = cd.dirt;
-      this.isCurrentCell = cd.isCurrentCell;
-      this.locX = cd.locX;
-      this.locY = cd.locY;
-      sI = new SensorInterface();
-      sI.atChargingStation = cd.sI.atChargingStation;
-      sI.dirtPresent = cd.sI.dirtPresent;
-      sI.floor = cd.sI.floor;
-      sI.features[0] = cd.sI.features[0];
-      sI.features[1] = cd.sI.features[1];
-      sI.features[2] = cd.sI.features[2];
-      sI.features[3] = cd.sI.features[3];
-      sI.startingXCoord = cd.sI.startingXCoord;
-      sI.startingYCoord = cd.sI.startingYCoord;
+      this.copy(cd);
    }
 
       /**
