@@ -47,29 +47,29 @@ public class BatteryAndDirtBinTest {
    @Test
    public void testMoved() {
       System.out.println("Test moved()");
-      floorType newFloorType = floorType.BareFloor;
+      floorType newFloorType = floorType.BARE_FLOOR;
       BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       System.out.println("--verify battery reduction for bare to bare");
       instance.moved(newFloorType); //500 - 10 = 490
       assertEquals(instance.charge(), 490);
       System.out.println("--verify battery reduction for bare to low");
-      newFloorType = floorType.LowPileCarpet;
+      newFloorType = floorType.LOW_PILE_CARPET;
       instance.moved(newFloorType); //490 - 15 = 475
       assertEquals(instance.charge(), 475);
       System.out.println("--verify battery reduction for low to low");
       instance.moved(newFloorType); //475 - 20 = 455
       assertEquals(instance.charge(), 455);
       System.out.println("--verify battery reduction for bare to high");
-      newFloorType = floorType.BareFloor;
+      newFloorType = floorType.BARE_FLOOR;
       instance.moved(newFloorType); //455 - 15 = 440
-      newFloorType = floorType.HighPileCarpet;
+      newFloorType = floorType.HIGH_PILE_CARPET;
       instance.moved(newFloorType); //440 - 20 = 420
       assertEquals(instance.charge(), 420);
       System.out.println("--verify battery reduction for high to high");
       instance.moved(newFloorType); //420 - 30 = 390
       assertEquals(instance.charge(), 390);
       System.out.println("--verify battery reduction for low to high");
-      newFloorType = floorType.LowPileCarpet;
+      newFloorType = floorType.LOW_PILE_CARPET;
       instance.moved(newFloorType); //390 - 25 = 375
       assertEquals(instance.charge(), 365);
    }
@@ -82,15 +82,15 @@ public class BatteryAndDirtBinTest {
    public void testSwept_0args() {
       System.out.println("Test swept()");
       System.out.println("--verify battery reduction 3 floor types");
-      floorType newFloorType = floorType.BareFloor;
+      floorType newFloorType = floorType.BARE_FLOOR;
       BatteryAndDirtBin instancea = new BatteryAndDirtBin(newFloorType);
       instancea.swept();
       assertEquals(instancea.charge(), 490);
-      newFloorType = floorType.LowPileCarpet;
+      newFloorType = floorType.LOW_PILE_CARPET;
       BatteryAndDirtBin instanceb = new BatteryAndDirtBin(newFloorType);
       instanceb.swept();
       assertEquals(instanceb.charge(), 480);
-      newFloorType = floorType.HighPileCarpet;
+      newFloorType = floorType.HIGH_PILE_CARPET;
       BatteryAndDirtBin instancec = new BatteryAndDirtBin(newFloorType);
       instancec.swept();
       assertEquals(instancec.charge(), 470);
@@ -106,15 +106,15 @@ public class BatteryAndDirtBinTest {
    public void testSwept_SensorInterfacefloorType() {
       System.out.println("Test swept(floortype)");
       System.out.println("--verify battery reduction 3 floor types");
-      floorType newFloorType = floorType.HighPileCarpet;
+      floorType newFloorType = floorType.HIGH_PILE_CARPET;
       BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
-      newFloorType = floorType.BareFloor;
+      newFloorType = floorType.BARE_FLOOR;
       instance.swept(newFloorType);
       assertEquals(instance.charge(), 490);
-      newFloorType = floorType.LowPileCarpet;
+      newFloorType = floorType.LOW_PILE_CARPET;
       instance.swept(newFloorType);
       assertEquals(instance.charge(), 470);
-      newFloorType = floorType.HighPileCarpet;
+      newFloorType = floorType.HIGH_PILE_CARPET;
       instance.swept(newFloorType);
       assertEquals(instance.charge(), 440);
       System.out.println("--verify dust bin capacity is reduced");
@@ -128,7 +128,7 @@ public class BatteryAndDirtBinTest {
    @Test
    public void testEmptyDustBin() {
       System.out.println("Test emptyDustBin()");
-      floorType newFloorType = floorType.HighPileCarpet;
+      floorType newFloorType = floorType.HIGH_PILE_CARPET;
       BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       instance.swept();
       instance.swept();
@@ -146,7 +146,7 @@ public class BatteryAndDirtBinTest {
    @Test
    public void testChargeBattery() {
       System.out.println("Test chargeBattery()");
-      floorType newFloorType = floorType.HighPileCarpet;
+      floorType newFloorType = floorType.HIGH_PILE_CARPET;
       BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       instance.swept();
       instance.swept();
@@ -164,7 +164,7 @@ public class BatteryAndDirtBinTest {
    @Test
    public void testDustBinCapacity() {
       System.out.println("Test dustBinCapacity()");
-      floorType newFloorType = floorType.HighPileCarpet;
+      floorType newFloorType = floorType.HIGH_PILE_CARPET;
       BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       instance.swept();
       instance.swept();
@@ -185,7 +185,7 @@ public class BatteryAndDirtBinTest {
    @Test
    public void testCharge() {
       System.out.println("Test charge()");
-      floorType newFloorType = floorType.HighPileCarpet;
+      floorType newFloorType = floorType.HIGH_PILE_CARPET;
       BatteryAndDirtBin instance = new BatteryAndDirtBin(newFloorType);
       instance.swept();
       instance.swept();

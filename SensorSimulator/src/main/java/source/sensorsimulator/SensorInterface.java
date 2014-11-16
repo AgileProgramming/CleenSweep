@@ -43,9 +43,9 @@ public class SensorInterface {
     */
    public enum floorType {
 
-      BareFloor(1, 10),
-      LowPileCarpet(2, 20),
-      HighPileCarpet(4, 30);
+      BARE_FLOOR(1, 10),
+      LOW_PILE_CARPET(2, 20),
+      HIGH_PILE_CARPET(4, 30);
       private int ft;
       private int c;
 
