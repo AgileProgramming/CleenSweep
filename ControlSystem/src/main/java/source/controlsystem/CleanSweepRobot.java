@@ -177,7 +177,7 @@ public class CleanSweepRobot {
                moved = moveToNextCleaningLocation(currentCell);
                break;
             case TO_CHARGING_STATION:
-               moved = moveToRechargeStation(currentCell);;
+               moved = moveToRechargeStation(currentCell);
               break;
             case FROM_CHARGING_STATION:
                moved = moveFromChargingStation(currentCell);
